@@ -1,5 +1,5 @@
-var hbSearchboxTemplate = Handlebars.compile($('#searchbox-template').html());
 var searchHistoryTimer = 0;
+var hbSearchboxTemplate;
 
 function processJsonSearchData(data, searchStr, updateHistory=true) {
 	let searchRes = $('<div class="search-results"></div>');
@@ -48,7 +48,7 @@ function searchFor(str, updateHistory=true) {
 }
 
 $(document).ready(function() {
-	$('[data-toggle="tooltip"]').tooltip();
+	hbSearchboxTemplate = Handlebars.compile($('#searchbox-template').html());
 	
 	// search
 	$('input[name="searchbar"]').keyup(function(ev) {
