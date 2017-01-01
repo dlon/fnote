@@ -84,7 +84,8 @@ $(document).ready(function() {
 			'advlist autolink lists link image charmap print hr anchor pagebreak',
 			'searchreplace wordcount visualblocks visualchars code fullscreen',
 			'insertdatetime media nonbreaking save table contextmenu directionality',
-			'template paste textcolor colorpicker textpattern imagetools codesample toc'
+			'template paste textcolor colorpicker textpattern imagetools codesample toc',
+			//'autoresize'
 		],
 		// fullpage: metadata
 		//toolbar: 'undo redo | styleselect | formats | bold italic unline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | forecolor backcolor | codesample code print', //  insert | styleselect
@@ -95,6 +96,7 @@ $(document).ready(function() {
 			{ title: 'Test template 1', content: 'Test 1' },
 			{ title: 'Test template 2', content: 'Test 2' }
 		],
+		/* INLINING (INLINING|AUTORESIZE) */
 		inline:true,
 		fixed_toolbar_container:'#toolbar-container',
 		autofocus:true,
@@ -106,6 +108,17 @@ $(document).ready(function() {
 					return false;
 			});
 		},
+		/* [END INLINING HERE] */
+		/* AUTORESIZE (INLINING|AUTORESIZE). (instead of inlining) - cf. also plugin */
+		/*autoresize_bottom_padding:0,
+		content_css: [
+			"http://fonts.googleapis.com/css?family=Open+Sans:300,400",
+			"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
+			"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
+			"static/freenote.css"
+		],
+		content_style: ".mce-content-body{padding:20px;font-size:1.8em}",*/
+		/* [END AUTORESIZE STYLE] */
 		end_container_on_empty_block: true
 	});
 	

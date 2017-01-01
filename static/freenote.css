@@ -55,15 +55,16 @@ html, body {
 	font-variant:small-caps;
 }
 
-#toolbar-container {
+#toolbar-container { /* FIXME: wrap icons on small width */
+	/* only used with inline [?] */
 	position:sticky;
 	z-index:99;
 	top:0;
 	background:#fff;
 	opacity:0.8;
 }
-#tinymce-area {
-	font-weight:3em;
+#tinymce-area { /* only used with inline [?] */
+	font-size:1.8em;
 	padding:20px;
 	overflow-x:auto;
 }
