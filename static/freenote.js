@@ -95,46 +95,19 @@ $(document).ready(function() {
 			{ title: 'Test template 1', content: 'Test 1' },
 			{ title: 'Test template 2', content: 'Test 2' }
 		],
-		//fixed_toolbar_container:'#toolbar-container',
-		/*content_css: [
-			'https://fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
-			'https://www.tinymce.com/css/codepen.min.css' // FIXME: how do i set the font normally?
-		],*/
-		content_css: [
-			'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
-			'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css'
-		],
-		//content_style: ".mce-content-body{font-family:'Open Sans', sans-serif;font-size:14px}",
-		content_style: ".mce-content-body{font-size:1.8em; padding:30px}", // works well with bootstrap css
+		inline:true,
+		fixed_toolbar_container:'#toolbar-container',
+		autofocus:true,
+		init_instance_callback: function() {
+			tinymce.activeEditor.focus();
+		},
+		setup: function (editor) {
+			editor.on('blur', function () {
+					return false;
+			});
+		},
 		end_container_on_empty_block: true
 	});
-	// FIXME: header editor
-	/*
-	var quillTitle = new Quill('#document-title', {
-		modules: {
-			toolbar: false,
-			syntax: true, // FIXME: it gets stuck without this
-			keyboard: {
-				bindings: {
-					'enter': { // disable line insertion
-						key: 13,
-						handler: function() {
-							return false; // FIXME: when tabbing into cursor=0, a line break is still added
-						}
-					},
-					'tab': {
-						key: 9,
-						handler: function() {
-							return true;
-						}
-					}
-				}
-			}
-		},
-		placeholder: 'Title',
-		theme: 'snow'
-	});
-	*/
 	
 	window.onpopstate = function(ev) {
 		// TODO: cache the search results?
