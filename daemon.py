@@ -6,13 +6,17 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # FIXME: remove. for instantaneous u
 import os
 import re
 
+''' UI '''
+
 @app.route('/')
 def index():
 	return flask.render_template('index.html')
 
 @app.route('/edit/<notebook>/<note>')
 def noteRequest(notebook, note):
-	return "%s, %s" % (notebook, note)
+	with open('notes/%s/%s' % (notebook, note)) as f:
+		# TODO: process the data in some way
+		return flask.render_template('index.html', noteData=f.read())
 
 ''' API '''
 	

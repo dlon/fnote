@@ -115,7 +115,7 @@ $(document).ready(function() {
 			"http://fonts.googleapis.com/css?family=Open+Sans:300,400",
 			"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
 			"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
-			"static/freenote.css"
+			"/static/freenote.css"
 		],
 		content_style: ".mce-content-body{padding:20px;font-size:1.8em}",*/
 		/* [END AUTORESIZE STYLE] */

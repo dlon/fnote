@@ -2,9 +2,9 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<script src="static/jquery.min.js"></script>
-	<script src="static/jquery-ui/jquery-ui.js"></script>
-	<link href="static/jquery-ui/jquery-ui.css" rel="stylesheet"/>
+	<script src="/static/jquery.min.js"></script>
+	<script src="/static/jquery-ui/jquery-ui.js"></script>
+	<link href="/static/jquery-ui/jquery-ui.css" rel="stylesheet"/>
 	
 	<!-- FIXME: use local files -->
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
@@ -14,14 +14,14 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> <!-- FIXME: optional: use both? -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	
-	<script src="static/tinymce/tinymce.min.js"></script>
+	<script src="/static/tinymce/tinymce.min.js"></script>
 	<!-- <script src="tinymce/jquery.tinymce.min.js"></script> -->
-	<script src="static/upndown.bundle.min.js"></script>
+	<script src="/static/upndown.bundle.min.js"></script>
 	
 	{% raw %}
 	<script id="searchbox-template" type="text/x-handlebars-template">
 		{{! TODO: add hr (or pseudo-element?) between search results }}
-		<a href="edit/{{notebook}}/{{note}}">
+		<a href="/edit/{{notebook}}/{{note}}">
 			<div class="searchbox">
 				<p class="search-file">{{notebook}}/{{note}}</p>
 				<p>{{{response}}}</p>
@@ -30,8 +30,8 @@
 	</script>
 	{% endraw %}
 	
-	<script src="static/freenote.js"></script>
-	<link rel="stylesheet" href="static/freenote.css">
+	<script src="/static/freenote.js"></script>
+	<link rel="stylesheet" href="/static/freenote.css">
 </head>
 <body>
 	<div id="sidebar">
@@ -55,7 +55,7 @@
 			<input id="document-title" placeholder="Title">
 		</div>
 		<div id="toolbar-container"></div>
-		<div id="tinymce-area"></div>
+		<div id="tinymce-area">{{ noteData }}</div>
 	</div>
 </body>
 </html>
