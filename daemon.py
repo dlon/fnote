@@ -10,10 +10,12 @@ import re
 def index():
 	return flask.render_template('index.html')
 
-@app.route('/request/<notebook>/<note>')
+@app.route('/edit/<notebook>/<note>')
 def noteRequest(notebook, note):
 	return "%s, %s" % (notebook, note)
 
+''' API '''
+	
 def indexIgnore(s, sub, ignoreChars):
 	'''find substring sub in string s. ignore chars in ignoreChars array.
 	returns index in s of first incidence of sub (-1 if no match)'''
@@ -35,7 +37,7 @@ def indexIgnore(s, sub, ignoreChars):
 			if c == sub[0]:
 				matchInd = 1
 	return -1
-
+	
 def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 	if not notebook and note:
 		#flask.abort(200) # FIXME: what error code is appropriate here? 404, 200, or neither?
@@ -76,6 +78,46 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 					if len(matches) >= int(maxNumResults):
 						return flask.json.dumps(matches)
 	return flask.json.dumps(matches)
+
+@app.route('/api/note', methods=['GET'])
+def apiGetNote():
+	'''returns an entire unprocessed note file in a json object'''
+	# TODO: process markdown into HTML, if requested?
+	# FIXME: not safe to trust client-provided strings in path str
+	with open('notes/%s/%s' % (flask.request.args['notebook'], flask.request.args['note'])) as f:
+		return flask.json.dumps({
+			'note': flask.request.args['note'],
+			'notebook': flask.request.args['notebook'],
+			'noteData': f.read()})
+
+@app.route('/api/note', methods=['DELETE'])
+def apiDeleteNote():
+	# FIXME: not safe to trust client-provided strings in path str
+	# move the files to a trashbin in ./delete/
+	if not os.path.exists('deleted/'):
+		os.mkdir('deleted/')
+	if not os.path.exists('deleted/%s/' % flask.request.args['notebook']):
+		os.mkdir('deleted/%s/' % flask.request.args['notebook'])
+	combinedPath = '%s/%s' % (flask.request.args['notebook'], flask.request.args['note'])
+	os.rename('notes/%s' % combinedPath, 'deleted/%s' % combinedPath)
+	return flask.json.dumps({'success':True})
+
+@app.route('/api/note', methods=['PUT', 'POST'])
+def apiPutNote():
+	# set all data (which may be an empty string) exactly in the given notebook and note
+	# (they are created if they do not exist)
+	# TODO: backup (under some conditions) before modifying data?
+	# NOTE: json must be  stored as payload using mimetype application/json
+	#       not in query str
+	if not os.path.exists('notes/'):
+		os.mkdir('notes/')
+	if not os.path.exists('notes/%s' % flask.request.args['notebook']):
+		os.mkdir('notes/%s' % flask.request.args['notebook'])
+	data = flask.request.get_json()['data']
+	with open("notes/%s/%s" % (flask.request.args['notebook'],
+		flask.request.args['note']), "w") as f:
+		f.write(data)
+	return flask.json.dumps({'success':True})
 
 @app.route('/api/search')
 def apiSearch():
