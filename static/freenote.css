@@ -55,26 +55,16 @@ html, body {
 	font-variant:small-caps;
 }
 
-#toolbar-container {
-	position:sticky;
+#toolbar-container { /* FIXME: sticky tinymce toolbars */
+	/*position:sticky;
 	z-index:99;
 	top:0;
 	background:#fff;
-	opacity:0.8;
-}
-/* let #content control the vertial scrollbar
- FIXME: autoscroll when the area expands (due to line breaks)
-*/
-#editor-container {
-	height:auto; /* FIXME: no video embedding/katex on last row */
-}
-#editor-container .ql-editor {
-	overflow-y: visible;
+	opacity:0.8;*/
 }
 #document-title {
 	border:0;
-}
-#document-title .ql-editor {
 	font-size:2em;
 	font-weight:bold;
+	padding:5px;
 }

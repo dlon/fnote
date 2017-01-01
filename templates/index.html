@@ -13,13 +13,11 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
 	<!-- bootstrap -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> <!-- FIXME: optional: ska man använda båda? -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> <!-- FIXME: optional: use both? -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	
-	<link rel="stylesheet" href="static/katex/katex.min.css"/>
-	<script type="text/javascript" src="static/katex/katex.min.js"></script>
-	<link rel="stylesheet" href="static/quill/quill.snow.css"/>
-	<script src="static/quill/quill.js"></script>
+	<script src="static/tinymce/tinymce.min.js"></script>
+	<!-- <script src="tinymce/jquery.tinymce.min.js"></script> -->
 	<script src="static/upndown.bundle.min.js"></script>
 	
 	{% raw %}
@@ -67,54 +65,11 @@
 			<div id="search-results-container"></div>
 		</div>
 		
-		<div><div id="document-title"></div></div>
-		<div id="toolbar-container">
-			<span class="ql-formats">
-			<select class="ql-font" data-toggle="tooltip" data-placement="bottom" title="Font"></select>
-			<select class="ql-header" data-toggle="tooltip" data-placement="bottom" title="Font size"></select>
-			</span>
-			<span class="ql-formats">
-			<button class="ql-bold" data-toggle="tooltip" data-placement="bottom" title="Bold"></button>
-			<button class="ql-italic" data-toggle="tooltip" data-placement="bottom" title="Italics"></button>
-			<button class="ql-underline" data-toggle="tooltip" data-placement="bottom" title="Underline"></button>
-			<button class="ql-strike" data-toggle="tooltip" data-placement="bottom" title="Strikethrough"></button>
-			</span>
-			<span class="ql-formats">
-			<select class="ql-color" data-toggle="tooltip" data-placement="bottom" title="Font color"></select>
-			<select class="ql-background" data-toggle="tooltip" data-placement="bottom" title="Font background color"></select>
-			</span>
-			<span class="ql-formats">
-			<button class="ql-script" value="sub" data-toggle="tooltip" data-placement="bottom" title="Subscript"></button>
-			<button class="ql-script" value="super" data-toggle="tooltip" data-placement="bottom" title="Superscript"></button>
-			</span>
-			<span class="ql-formats">
-			<button class="ql-header" value="1" data-toggle="tooltip" data-placement="bottom" title="Header 1"></button>
-			<button class="ql-header" value="2" data-toggle="tooltip" data-placement="bottom" title="Header 2"></button>
-			<button class="ql-blockquote" data-toggle="tooltip" data-placement="bottom" title="Blockquote"></button>
-			<button class="ql-code-block" data-toggle="tooltip" data-placement="bottom" title="Code block"></button>
-			</span>
-			<span class="ql-formats">
-			<button class="ql-list" value="ordered" data-toggle="tooltip" data-placement="bottom" title="Ordered list"></button>
-			<button class="ql-list" value="bullet" data-toggle="tooltip" data-placement="bottom" title="Unordered list"></button>
-			<button class="ql-indent" value="-1" data-toggle="tooltip" data-placement="bottom" title="Decrease indentation"></button>
-			<button class="ql-indent" value="+1" data-toggle="tooltip" data-placement="bottom" title="Increase indentation"></button>
-			</span>
-			<span class="ql-formats">
-			<button class="ql-direction" value="rtl" data-toggle="tooltip" data-placement="bottom" title="Alternate left/right alignment"></button>
-			<select class="ql-align" data-toggle="tooltip" data-placement="bottom" title="Set alignment"></select>
-			</span>
-			<span class="ql-formats">
-			<button class="ql-link" data-toggle="tooltip" data-placement="bottom" title="Insert link"></button>
-			<button class="ql-image" data-toggle="tooltip" data-placement="bottom" title="Insert image"></button>
-			<button class="ql-video" data-toggle="tooltip" data-placement="bottom" title="Embed video"></button>
-			<button class="ql-formula" data-toggle="tooltip" data-placement="bottom" title="Insert formula"></button>
-			</span>
-			<span class="ql-formats">
-			<button class="ql-clean" data-toggle="tooltip" data-placement="bottom" title="Clean formatting"></button>
-			</span>
+		<div>
+			<input id="document-title" placeholder="Title">
 		</div>
-	
-		<div id="editor-container" tabindex=-1></div>
+		<div id="toolbar-container"></div>
+		<textarea id="tinymce-area"></textarea>
 	</div>
 </body>
 </html>

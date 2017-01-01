@@ -72,38 +72,44 @@ $(document).ready(function() {
 		}
 	});
 	
-	// FIXME: headers tags don't close when pressing enter (as they do in the demos)
-	var quill = new Quill('#editor-container', {
-		modules: {
-			formula: true,
-			syntax: true, // FIXME: it gets stuck without this
-			toolbar: '#toolbar-container',
-			keyboard: {
-				bindings: {
-					'outputMarkdown': {
-						key: 121, // F10
-						handler: function() {
-							// test: convert to markdown
-							var und = new upndown();
-							alert(quill.root.innerHTML);
-							und.convert(quill.root.innerHTML, function(err, markdown) {
-								if (err) {
-									console.err(err);
-									return;
-								}
-								alert(markdown);
-							});
-						}
-					}
-				}
-			}
-		},
-		placeholder: 'Compose an epic...',
-		theme: 'snow',
-		// FIXME: video embedding and katex don't work on the last row. appears to be a bug
-		bounds: '#content',
-		scrollingContainer: '#content'
+	tinymce.init({
+		selector: '#tinymce-area',
+		//height: 500,
+		theme: 'modern',
+		//skin: 'light',
+		skin: 'custom', // NOTE: created using skin.tinymce.com
+		menubar:false,
+		image_caption:true,
+		plugins: [
+			'advlist autolink lists link image charmap print hr anchor pagebreak',
+			'searchreplace wordcount visualblocks visualchars code fullscreen',
+			'insertdatetime media nonbreaking save table contextmenu directionality',
+			'template paste textcolor colorpicker textpattern imagetools codesample toc'
+		],
+		// fullpage: metadata
+		//toolbar: 'undo redo | styleselect | formats | bold italic unline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | forecolor backcolor | codesample code print', //  insert | styleselect
+		//toolbar2: 'print preview | forecolor backcolor | codesample code',
+		toolbar: "undo redo | styleselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent table | link image media | codesample code print insert fullscreen", // symbols disappeared in 'light' - obsolete?
+		image_advtab: true,
+		templates: [
+			{ title: 'Test template 1', content: 'Test 1' },
+			{ title: 'Test template 2', content: 'Test 2' }
+		],
+		//fixed_toolbar_container:'#toolbar-container',
+		/*content_css: [
+			'https://fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
+			'https://www.tinymce.com/css/codepen.min.css' // FIXME: how do i set the font normally?
+		],*/
+		content_css: [
+			'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
+			'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css'
+		],
+		//content_style: ".mce-content-body{font-family:'Open Sans', sans-serif;font-size:14px}",
+		content_style: ".mce-content-body{font-size:1.8em; padding:30px}", // works well with bootstrap css
+		end_container_on_empty_block: true
 	});
+	// FIXME: header editor
+	/*
 	var quillTitle = new Quill('#document-title', {
 		modules: {
 			toolbar: false,
@@ -128,8 +134,7 @@ $(document).ready(function() {
 		placeholder: 'Title',
 		theme: 'snow'
 	});
-	quillTitle.root.tabIndex = 1;
-	quill.root.tabIndex = 2; // FIXME: now how do we tab to the toolbar?
+	*/
 	
 	window.onpopstate = function(ev) {
 		// TODO: cache the search results?
