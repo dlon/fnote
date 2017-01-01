@@ -35,7 +35,124 @@
 </head>
 <body>
 	<div id="sidebar">
-		<p>test</p>
+		<style>
+		#sidebar {
+			overflow-x:hidden;
+		}
+		#sidebar .breadcrumb {
+			height:30px; /* FIXME: don't use abs */
+			z-index:101;
+			position:sticky;
+			top:0;
+		}
+		.notebooks-list .panel {
+			margin:0;
+		}
+		.notebooks-list .panel-heading {
+			position:sticky;
+			opacity:0.9;
+			top:30px; /* FIXME: don't use abs */
+			z-index:100;
+		}
+		.notebooks-list {
+			position:absolute; /* for sliding animation */
+			top:0;
+			left:0;
+			width:100%;
+		}
+		#notebooks-wrapper {
+			position:relative;
+		}
+		</style>
+		<script>
+			function slideInToRight(e) {
+				$(e).css({left: -$(e).outerWidth()});
+				$(e).animate({left:0});
+			}
+			function slideOutToRight(e) {
+				$(e).animate({
+					left:$(e).outerWidth()
+					//left:'100px'
+				}, function() {
+					$(e).remove();
+				});
+				// test: slide other menu in
+				let f = e.clone();
+				f.appendTo('#notebooks-wrapper');
+				slideInToRight(f);
+			}
+		</script>
+		<ol class="breadcrumb">
+		  <li><a href="#">Home</a></li>
+		  <!-- <li><a href="#" onclick="javascript:(function() {$('#notebooks-list').hide('slide', {direction:'right'})})()">Notebooks</a></li> -->
+		  <li><a href="#" onclick="javascript:slideOutToRight($('.notebooks-list'));">Notebooks</a></li>
+		  <!-- <li><a href="#" onclick="javascript:(function(){$('notebooks-list').animate({left:$('notebooks-list').outerWidth()})})()">Notebooks</a></li> -->
+		  <li>Notebook 1</li>
+		</ol>
+		<div id="notebooks-wrapper">
+			<div class="notebooks-list">
+				<div class="panel panel-primary">
+					<div class="panel-heading"><h1 class="panel-title">A</h1></div>
+					<div class="panel-body">
+						<ul class="nav nav-pills nav-stacked">
+							<li role="presentation"><a href="#">Andrew W.K.</a></li>
+							<li role="presentation"><a href="#">Apparat</a></li>
+							<li role="presentation"><a href="#">Arcade Fire</a></li>
+							<li role="presentation"><a href="#">At The Drive-In</a></li>
+							<li role="presentation" class="active"><a href="#">Aziz Ansari</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading"><h1 class="panel-title">B</h1></div>
+					<div class="panel-body">
+						<ul class="nav nav-pills nav-stacked">
+							<li role="presentation"><a href="#">Andrew W.K.</a></li>
+							<li role="presentation"><a href="#">Apparat</a></li>
+							<li role="presentation"><a href="#">Arcade Fire</a></li>
+							<li role="presentation"><a href="#">At The Drive-In</a></li>
+							<li role="presentation"><a href="#">Aziz Ansari</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading"><h1 class="panel-title">C</h1></div>
+					<div class="panel-body">
+						<ul class="nav nav-pills nav-stacked">
+							<li role="presentation"><a href="#">Andrew W.K.</a></li>
+							<li role="presentation"><a href="#">Apparat</a></li>
+							<li role="presentation"><a href="#">Arcade Fire</a></li>
+							<li role="presentation"><a href="#">At The Drive-In</a></li>
+							<li role="presentation"><a href="#">Aziz Ansari</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading"><h1 class="panel-title">D</h1></div>
+					<div class="panel-body">
+						<ul class="nav nav-pills nav-stacked">
+							<li role="presentation"><a href="#">Andrew W.K.</a></li>
+							<li role="presentation"><a href="#">Apparat</a></li>
+							<li role="presentation"><a href="#">Arcade Fire</a></li>
+							<li role="presentation"><a href="#">At The Drive-In</a></li>
+							<li role="presentation"><a href="#">Aziz Ansari</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading"><h1 class="panel-title">E</h1></div>
+					<div class="panel-body">
+						<ul class="nav nav-pills nav-stacked">
+							<li role="presentation"><a href="#">Andrew W.K.</a></li>
+							<li role="presentation"><a href="#">Apparat</a></li>
+							<li role="presentation"><a href="#">Arcade Fire</a></li>
+							<li role="presentation"><a href="#">At The Drive-In</a></li>
+							<li role="presentation"><a href="#">Aziz Ansari</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div id="content">
 		<div id="search-wrapper"> <!-- to handle clicks removing the search results -->
