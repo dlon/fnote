@@ -32,18 +32,6 @@
 	
 	<script src="static/freenote.js"></script>
 	<link rel="stylesheet" href="static/freenote.css">
-	
-	{% if searchJsonData %}
-	<script>
-		$(document).ready(function() {
-			processJsonSearchData({{ searchJsonData }}, "{{ searchStr }}", false);
-			$('input[name="searchbar"]').val("{{ searchStr }}");
-			window.history.replaceState({
-				inputValue:"{{ searchStr }}"
-			}, 'search', '/search?q='+encodeURIComponent("{{ searchStr }}"));
-		});
-	</script>
-	{% endif %}
 </head>
 <body>
 	<div id="sidebar">

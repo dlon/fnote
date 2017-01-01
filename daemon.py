@@ -77,15 +77,6 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 						return flask.json.dumps(matches)
 	return flask.json.dumps(matches)
 
-@app.route('/search')
-def search():
-	jsonData = jsonSearch(flask.request.args.get('q', ''),
-		flask.request.args.get('maxNumResults', 10),
-		flask.request.args.get('responseRadius', 50)) # FIXME: somewhat awkward to define default representation here
-	print jsonData
-	# FIXME: merge both functions? add a "format=json" option?
-	return flask.render_template('index.html', searchStr=flask.request.args['q'], searchJsonData=flask.Markup(jsonData))
-
 @app.route('/api/search')
 def apiSearch():
 	'''returns JSON string (partial strings surrounding the matches) or renders html page'''

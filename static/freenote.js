@@ -29,7 +29,7 @@ function processJsonSearchData(data, searchStr, updateHistory=true) {
 		searchHistoryTimer = setTimeout(function() {
 			window.history.pushState({
 				inputValue:searchStr
-			}, 'search', '/search?q='+encodeURIComponent(searchStr));
+			}, 'search', '');
 		}, 1000);
 	}
 }
