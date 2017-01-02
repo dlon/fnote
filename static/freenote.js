@@ -121,7 +121,7 @@ $(document).ready(function() {
 			editor.on('blur', function () {
 				return false;
 			});
-			editor.on('KeyUp', function(ev) {
+			editor.on('keyup', function(ev) {
 				$('#document-status').text('Saving...').show();
 				$.ajax('/api/note?notebook='+getNotebook()+'&note='+getNote(), {
 					method: 'POST',
@@ -135,6 +135,19 @@ $(document).ready(function() {
 				});
 				// TODO: add error message
 				// TODO: add "last saved" info
+			});
+			editor.on('keydown', function(ev) {
+				// tab indent
+				if (ev.keyCode == 9) {
+					if (ev.shiftKey) {
+						editor.execCommand('Outdent');
+					}
+					else {
+						editor.execCommand('Indent');
+					}
+					ev.preventDefault();
+					return false;
+				}
 			});
 		},
 		/* [END INLINING HERE] */
