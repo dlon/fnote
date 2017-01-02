@@ -6,13 +6,44 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # FIXME: remove. for instantaneous u
 import os
 import re
 
+# set user and password to enable HTTP basic authentication
+from functools import wraps
+username = 'admin'
+password = 'pass'
+
+def check_auth(user, pass_):
+	"""This function is called to check if a username /
+	password combination is valid.
+	"""
+	return user == username and pass_ == password
+
+def authenticate():
+	"""Sends a 401 response that enables basic auth"""
+	return flask.Response(
+		'Could not verify your access level for that URL.\n'
+		'You have to login with proper credentials', 401,
+		{'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def checkAuthIfSet(f):
+	if not username and not password:
+		return f
+	@wraps(f)
+	def decorated(*args, **kwargs):
+		auth = flask.request.authorization
+		if not auth or not check_auth(auth.username, auth.password):
+			return authenticate()
+		return f(*args, **kwargs)
+	return decorated
+
 ''' UI '''
 
 @app.route('/')
+@checkAuthIfSet
 def index():
 	return flask.render_template('index.html')
 
 @app.route('/edit/<notebook>/<note>')
+@checkAuthIfSet
 def noteRequest(notebook, note):
 	with open('notes/%s/%s' % (notebook, note)) as f:
 		# TODO: process the data in some way
@@ -84,6 +115,7 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 	return flask.json.dumps(matches)
 
 @app.route('/api/note', methods=['GET'])
+@checkAuthIfSet
 def apiGetNote():
 	'''returns an entire unprocessed note file in a json object'''
 	# TODO: process markdown into HTML, if requested?
@@ -95,6 +127,7 @@ def apiGetNote():
 			'noteData': f.read()})
 
 @app.route('/api/note', methods=['DELETE'])
+@checkAuthIfSet
 def apiDeleteNote():
 	# FIXME: not safe to trust client-provided strings in path str
 	# move the files to a trashbin in ./delete/
@@ -107,6 +140,7 @@ def apiDeleteNote():
 	return flask.json.dumps({'success':True})
 
 @app.route('/api/note', methods=['PUT', 'POST'])
+@checkAuthIfSet
 def apiPutNote():
 	# set all data (which may be an empty string) exactly in the given notebook and note
 	# (they are created if they do not exist)
@@ -124,6 +158,7 @@ def apiPutNote():
 	return flask.json.dumps({'success':True})
 
 @app.route('/api/search')
+@checkAuthIfSet
 def apiSearch():
 	'''returns JSON string (partial strings surrounding the matches) or renders html page'''
 	#notebook = flask.request.args.get('notebook', '') # if only this, then search all notes in that notebook
