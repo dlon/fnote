@@ -47,7 +47,9 @@ def index():
 def noteRequest(notebook, note):
 	with open('notes/%s/%s' % (notebook, note)) as f:
 		# TODO: process the data in some way
-		return flask.render_template('index.html', noteData=f.read())
+		return flask.render_template('index.html',
+			notebook=notebook, note=note,
+			noteData=f.read())
 
 ''' API '''
 	
