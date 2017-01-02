@@ -85,6 +85,34 @@ $(document).ready(function() {
 		}
 	});
 	
+	//var lastSave = 0;
+	var lastSaveState = null;
+	var saveFunc = function(editor) {
+		/*if ($.now() - lastSave < 1000.0) {
+			// attempt save at most once per second
+			return;
+		}
+		lastSave = $.now();*/
+		var newSaveState = editor.getContent();
+		if (lastSaveState === newSaveState) {
+			return; // no changes were made
+		}
+		$('#document-status').text('Saving...').show();
+		$.ajax('/api/note?notebook='+getNotebook()+'&note='+getNote(), {
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify({
+				data: newSaveState
+			})
+		}).done(function(data) {
+			lastSaveState = newSaveState;
+			$('#document-status').text('Saved.')
+				.delay(3000).fadeOut();
+		});
+		// TODO: add error message
+		// TODO: add "last saved" info
+	};
+	
 	tinymce.init({
 		selector: '#tinymce-area',
 		//height: 500,
@@ -116,26 +144,20 @@ $(document).ready(function() {
 		autofocus:true,
 		init_instance_callback: function() {
 			tinymce.activeEditor.focus();
+			// TODO: save periodically (setInterval)
 		},
 		setup: function (editor) {
 			editor.on('blur', function () {
 				return false;
 			});
 			editor.on('keyup', function(ev) {
-				$('#document-status').text('Saving...').show();
-				$.ajax('/api/note?notebook='+getNotebook()+'&note='+getNote(), {
-					method: 'POST',
-					contentType: 'application/json',
-					data: JSON.stringify({
-						data: editor.getContent()
-					})
-				}).done(function(data) {
-					$('#document-status').text('Saved.')
-						.delay(3000).fadeOut();
-				});
-				// TODO: add error message
-				// TODO: add "last saved" info
+				if (ev.keyCode>=33 && ev.keyCode<=40) { // pgup, pgdown, end, home, & arrow keys
+					// arrows
+					return;
+				}
+				saveFunc(editor);
 			});
+			editor.on('change', function(ev){saveFunc(editor);}); // only updates when undo states are created
 			editor.on('keydown', function(ev) {
 				// tab indent
 				if (ev.keyCode == 9) {
