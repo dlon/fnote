@@ -62,15 +62,26 @@ html, body {
 	top:0;
 	background:#fff;
 	opacity:0.8;
+	clear:both;
 }
 #tinymce-area { /* only used with inline [?] */
 	font-size:1.5em;
 	padding:20px;
 	overflow-x:auto;
 }
+#document-info {
+	padding:10px;
+	width:100%;
+	display:table;
+}
 #document-title {
 	border:0;
 	font-size:2em;
 	font-weight:bold;
-	padding:5px;
+	display:table-cell;
+}
+#document-status {
+	display:table-cell;
+	width:20%;
+	text-align:right;
 }

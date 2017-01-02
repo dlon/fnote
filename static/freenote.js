@@ -47,6 +47,19 @@ function searchFor(str, updateHistory=true) {
 	});
 }
 
+function getNotebook() {
+	locArray = window.location.pathname.split('/');
+	if (locArray[1].toLowerCase() == 'edit') {
+		return locArray[2];
+	}
+}
+function getNote() {
+	locArray = window.location.pathname.split('/');
+	if (locArray[1].toLowerCase() == 'edit') {
+		return locArray[3];
+	}
+}
+
 $(document).ready(function() {
 	hbSearchboxTemplate = Handlebars.compile($('#searchbox-template').html());
 	
@@ -96,6 +109,7 @@ $(document).ready(function() {
 			{ title: 'Test template 1', content: 'Test 1' },
 			{ title: 'Test template 2', content: 'Test 2' }
 		],
+		//setup: // FIXME: need the change event from below
 		/* INLINING (INLINING|AUTORESIZE) */
 		inline:true,
 		fixed_toolbar_container:'#toolbar-container',
@@ -105,7 +119,22 @@ $(document).ready(function() {
 		},
 		setup: function (editor) {
 			editor.on('blur', function () {
-					return false;
+				return false;
+			});
+			editor.on('KeyUp', function(ev) {
+				$('#document-status').text('Saving...').show();
+				$.ajax('/api/note?notebook='+getNotebook()+'&note='+getNote(), {
+					method: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({
+						data: editor.getContent()
+					})
+				}).done(function(data) {
+					$('#document-status').text('Saved.')
+						.delay(3000).fadeOut();
+				});
+				// TODO: add error message
+				// TODO: add "last saved" info
 			});
 		},
 		/* [END INLINING HERE] */

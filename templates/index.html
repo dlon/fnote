@@ -168,11 +168,12 @@
 			<div id="search-results-container"></div>
 		</div>
 		
-		<div>
+		<div id="document-info">
 			<input id="document-title" placeholder="Title">
+			<span id="document-status"></span>
 		</div>
 		<div id="toolbar-container"></div>
-		<div id="tinymce-area">{{ noteData }}</div>
+		<div id="tinymce-area">{{ noteData|safe }}</div>
 	</div>
 </body>
 </html>
