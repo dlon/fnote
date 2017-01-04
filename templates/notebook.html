@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li><a href="/">Home</a></li>
+<li>{{ notebook }}</li>
+{% endblock %}
+
+{% block notebooks_list %}
+<div class="panel panel-primary">
+	<div class="panel-heading"><h1 class="panel-title">A</h1></div>
+	<div class="panel-body">
+		<ul class="nav nav-pills nav-stacked">
+			{% for note in notes %}
+			<li role="presentation"><a href="/edit/{{ notebook }}/{{ note }}">{{ note }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endblock %}

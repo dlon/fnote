@@ -1,179 +1,26 @@
-<!doctype html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<script src="/static/jquery.min.js"></script>
-	<script src="/static/jquery-ui/jquery-ui.js"></script>
-	<link href="/static/jquery-ui/jquery-ui.css" rel="stylesheet"/>
-	
-	<!-- FIXME: use local files -->
-	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
-	<!-- bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> <!-- FIXME: optional: use both? -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-	
-	<script src="/static/tinymce/tinymce.min.js"></script>
-	<!-- <script src="tinymce/jquery.tinymce.min.js"></script> -->
-	<script src="/static/upndown.bundle.min.js"></script>
-	
-	{% raw %}
-	<script id="searchbox-template" type="text/x-handlebars-template">
-		{{! TODO: add hr (or pseudo-element?) between search results }}
-		<a href="/edit/{{notebook}}/{{note}}">
-			<div class="searchbox">
-				<p class="search-file">{{notebook}}/{{note}}</p>
-				<p>{{{response}}}</p>
-			</div>
-		</a>
-	</script>
-	{% endraw %}
-	
-	<script src="/static/freenote.js"></script>
-	<link rel="stylesheet" href="/static/freenote.css">
-</head>
-<body>
-	<div id="sidebar">
-		<style>
-		#sidebar {
-			overflow-x:hidden;
-		}
-		#sidebar .breadcrumb {
-			height:30px; /* FIXME: don't use abs */
-			z-index:101;
-			position:sticky;
-			top:0;
-		}
-		.notebooks-list .panel {
-			margin:0;
-		}
-		.notebooks-list .panel-heading {
-			position:sticky;
-			opacity:0.9;
-			top:30px; /* FIXME: don't use abs */
-			z-index:100;
-		}
-		.notebooks-list {
-			position:absolute; /* for sliding animation */
-			top:0;
-			left:0;
-			width:100%;
-		}
-		#notebooks-wrapper {
-			position:relative;
-		}
-		</style>
-		<script>
-			function slideInToRight(e) {
-				$(e).css({left: -$(e).outerWidth()});
-				$(e).animate({left:0});
-			}
-			function slideOutToRight(e) {
-				$(e).animate({
-					left:$(e).outerWidth()
-					//left:'100px'
-				}, function() {
-					$(e).remove();
-				});
-				// test: slide other menu in
-				let f = e.clone();
-				f.appendTo('#notebooks-wrapper');
-				slideInToRight(f);
-			}
-		</script>
-		<ol class="breadcrumb">
-		  <li><a href="/">Home</a></li>
-		  <!-- <li><a href="#" onclick="javascript:(function() {$('#notebooks-list').hide('slide', {direction:'right'})})()">Notebooks</a></li> -->
-		  <li><a href="#" onclick="javascript:slideOutToRight($('.notebooks-list'));">Notebooks</a></li>
-		  <!-- <li><a href="#" onclick="javascript:(function(){$('notebooks-list').animate({left:$('notebooks-list').outerWidth()})})()">Notebooks</a></li> -->
-		  <li>Notebook 1</li>
-		</ol>
-		<div id="notebooks-wrapper">
-			<div class="notebooks-list">
-				<div class="panel panel-primary">
-					<div class="panel-heading"><h1 class="panel-title">A</h1></div>
-					<div class="panel-body">
-						<ul class="nav nav-pills nav-stacked">
-							<li role="presentation"><a href="#">Andrew W.K.</a></li>
-							<li role="presentation"><a href="#">Apparat</a></li>
-							<li role="presentation"><a href="#">Arcade Fire</a></li>
-							<li role="presentation"><a href="#">At The Drive-In</a></li>
-							<li role="presentation" class="active"><a href="#">Aziz Ansari</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="panel panel-primary">
-					<div class="panel-heading"><h1 class="panel-title">B</h1></div>
-					<div class="panel-body">
-						<ul class="nav nav-pills nav-stacked">
-							<li role="presentation"><a href="#">Andrew W.K.</a></li>
-							<li role="presentation"><a href="#">Apparat</a></li>
-							<li role="presentation"><a href="#">Arcade Fire</a></li>
-							<li role="presentation"><a href="#">At The Drive-In</a></li>
-							<li role="presentation"><a href="#">Aziz Ansari</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="panel panel-primary">
-					<div class="panel-heading"><h1 class="panel-title">C</h1></div>
-					<div class="panel-body">
-						<ul class="nav nav-pills nav-stacked">
-							<li role="presentation"><a href="#">Andrew W.K.</a></li>
-							<li role="presentation"><a href="#">Apparat</a></li>
-							<li role="presentation"><a href="#">Arcade Fire</a></li>
-							<li role="presentation"><a href="#">At The Drive-In</a></li>
-							<li role="presentation"><a href="#">Aziz Ansari</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="panel panel-primary">
-					<div class="panel-heading"><h1 class="panel-title">D</h1></div>
-					<div class="panel-body">
-						<ul class="nav nav-pills nav-stacked">
-							<li role="presentation"><a href="#">Andrew W.K.</a></li>
-							<li role="presentation"><a href="#">Apparat</a></li>
-							<li role="presentation"><a href="#">Arcade Fire</a></li>
-							<li role="presentation"><a href="#">At The Drive-In</a></li>
-							<li role="presentation"><a href="#">Aziz Ansari</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="panel panel-primary">
-					<div class="panel-heading"><h1 class="panel-title">E</h1></div>
-					<div class="panel-body">
-						<ul class="nav nav-pills nav-stacked">
-							<li role="presentation"><a href="#">Andrew W.K.</a></li>
-							<li role="presentation"><a href="#">Apparat</a></li>
-							<li role="presentation"><a href="#">Arcade Fire</a></li>
-							<li role="presentation"><a href="#">At The Drive-In</a></li>
-							<li role="presentation"><a href="#">Aziz Ansari</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li>Home</li>
+{% endblock %}
+
+{% block notebooks_list %}
+<div class="panel panel-primary">
+	<div class="panel-heading"><h1 class="panel-title">Recent notes</h1></div>
+	<div class="panel-body">
+		<ul class="nav nav-pills nav-stacked">
+			<li role="presentation"><a href="/">qwe</a></li>
+		</ul>
 	</div>
-	<div id="content">
-		<div id="search-wrapper"> <!-- to handle clicks removing the search results -->
-			<form class="navbar-form" role="search">
-				<div class="input-group col-xs-10">
-					<input type="text" placeholder="Search all notes" class="form-control" name="searchbar" tabindex="1">					
-					<div class="input-group-btn">
-						<button type="submit" class="btn btn-secondary"><span class="glyphicon glyphicon-search"></span></button>
-						<!-- TODO: use bootstrap 4's btn-outline-primary -->
-					</div>
-				</div>
-			</form>
-			<div id="search-results-container"></div>
-		</div>
-		
-		<div id="document-info">
-			<input id="document-title" placeholder="Title" value="{{ note }}">
-			<span id="document-status"></span>
-		</div>
-		<div id="toolbar-container"></div>
-		<div id="tinymce-area">{{ noteData|safe }}</div>
+</div>
+<div class="panel panel-primary">
+	<div class="panel-heading"><h1 class="panel-title">Notebooks</h1></div>
+	<div class="panel-body">
+		<ul class="nav nav-pills nav-stacked">
+			{% for notebook in notebooks %}
+			<li role="presentation"><a href="/notebook/{{ notebook }}">{{ notebook }}</a></li>
+			{% endfor %}
+		</ul>
 	</div>
-</body>
-</html>
+</div>
+{% endblock %}
