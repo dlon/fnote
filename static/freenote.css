@@ -6,6 +6,7 @@ html, body {
 	float:left;
 	/*overflow:scroll;*/
 	overflow:auto; /* FIXME: this is browser-dependent*/
+	-webkit-overflow-scrolling:touch; /* smooth scrolling in ios */
 	height:100vh;
 	width:25vw;
 	min-width:300px;
@@ -16,6 +17,7 @@ html, body {
 	/*overflow:scroll;*/
 	overflow:auto; /* FIXME: this is browser-dependent */
 	position:relative;
+	-webkit-overflow-scrolling:touch; /* smooth scrolling in ios */
 }
 
 #search-wrapper {
