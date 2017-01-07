@@ -52,11 +52,12 @@ def notebook(notebook):
 @app.route('/edit/<notebook>/<note>')
 @checkAuthIfSet
 def noteRequest(notebook, note):
+	notes = os.listdir('notes/%s/' % notebook) # FIXME: don't trust the input
 	with open('notes/%s/%s' % (notebook, note)) as f:
 		# TODO: process the data in some way
 		return flask.render_template('note.html',
 			notebook=notebook, note=note,
-			noteData=f.read())
+			noteData=f.read(), notes=notes)
 
 ''' API '''
 	
@@ -123,6 +124,22 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 					if len(matches) >= int(maxNumResults):
 						return flask.json.dumps(matches)
 	return flask.json.dumps(matches)
+
+@app.route('/api/notebooks', methods=['GET'])
+@checkAuthIfSet
+def apiGetNotebooks():
+	return flask.json.dumps({
+		'notebooks': [item for item in os.listdir('notes/') if os.path.isdir('notes/%s' % item)]
+		})
+
+@app.route('/api/notes', methods=['GET'])
+@checkAuthIfSet
+def apiGetNotes():
+	notes = os.listdir('notes/%s/' % flask.request.args['notebook'])
+	return flask.json.dumps({
+		'notebook': flask.request.args['notebook'],
+		'notes': notes
+		})
 
 @app.route('/api/note', methods=['GET'])
 @checkAuthIfSet

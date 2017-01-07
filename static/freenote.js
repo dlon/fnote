@@ -21,7 +21,7 @@ function processJsonSearchData(data, searchStr, updateHistory=true) {
 	}, function(){
 		$(this).animate({'background-color':"#ddd"}, 200);
 	});
-	
+
 	if (updateHistory) {
 		if (searchHistoryTimer) {
 			clearTimeout(searchHistoryTimer);
@@ -47,22 +47,27 @@ function searchFor(str, updateHistory=true) {
 	});
 }
 
+var editNotebook, editNote;
+
 function getNotebook() {
 	locArray = window.location.pathname.split('/');
-	if (locArray[1].toLowerCase() == 'edit') {
-		return locArray[2];
+	if (locArray[1].toLowerCase() == 'edit' || locArray[1].toLowerCase() == 'notebook') {
+		return decodeURIComponent(locArray[2]);
 	}
 }
 function getNote() {
 	locArray = window.location.pathname.split('/');
 	if (locArray[1].toLowerCase() == 'edit') {
-		return locArray[3];
+		return decodeURIComponent(locArray[3]);
 	}
 }
 
 $(document).ready(function() {
 	hbSearchboxTemplate = Handlebars.compile($('#searchbox-template').html());
-	
+
+	editNotebook = getNotebook();
+	editNote = getNote();
+
 	// search
 	$('input[name="searchbar"]').keyup(function(ev) {
 		if (ev.which === 13 || ev.which === 37 || ev.which === 38 || ev.which === 39 || ev.which === 40) {
@@ -84,10 +89,13 @@ $(document).ready(function() {
 			elem.hide({});
 		}
 	});
-	
+
 	//var lastSave = 0;
 	var lastSaveState = null;
 	var saveFunc = function(editor) {
+		if (!editNotebook || !editNote) {
+			return; // TODO: add error msg
+		}
 		/*if ($.now() - lastSave < 1000.0) {
 			// attempt save at most once per second
 			return;
@@ -98,7 +106,7 @@ $(document).ready(function() {
 			return; // no changes were made
 		}
 		$('#document-status').text('Saving...').show();
-		$.ajax('/api/note?notebook='+getNotebook()+'&note='+getNote(), {
+		$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
 			method: 'POST',
 			contentType: 'application/json',
 			data: JSON.stringify({
@@ -112,7 +120,7 @@ $(document).ready(function() {
 		// TODO: add error message
 		// TODO: add "last saved" info
 	};
-	
+
 	tinymce.init({
 		selector: '#tinymce-area',
 		//height: 500,
@@ -186,16 +194,116 @@ $(document).ready(function() {
 		end_container_on_empty_block: true
 	});
 	
+	// sidebar nav
+	var hbNotelistTemplate = Handlebars.compile($('#notelist-template').html());
+	var hbNotebooksTemplate = Handlebars.compile($('#notebooks-template').html());
+	function navLoadHome(updateHistory = true) {
+		$.ajax('/api/notebooks', {
+			method: 'GET',
+			dataType: 'json'
+		}).done(function(data) {
+			$('#sidebar .breadcrumb').html('<li>Home</li>');
+			$('.notebooks-list').empty();
+			$('.notebooks-list').append(hbNotebooksTemplate({
+				notebooks:data.notebooks
+			}));
+
+			if (updateHistory) {
+				window.history.pushState({'navLevel': 1}, 'nbnav', '/');
+			}
+
+			setSidebarEvents();
+		});
+	}
+	function navLoadNotebook(notebook, updateHistory = true) {
+		$.ajax('/api/notes', {
+			method: 'GET',
+			dataType: 'json',
+			data: {
+				notebook: notebook
+			}
+		}).done(function(data) {
+			$('#sidebar .breadcrumb').html('<li><a href="/">Home</a></li>').append('<li>'+notebook+'</li>');
+			$('.notebooks-list').empty();
+			$('.notebooks-list').append(hbNotelistTemplate({
+				notes:data.notes,
+				notebook:notebook
+			}));
+
+			if (updateHistory) {
+				window.history.pushState({navLevel: 2, navNb:notebook}, 'nbnav', '/notebook/'+notebook);
+			}
+
+			setSidebarEvents();
+		});
+	}
+	function navLoadNote(notebook, note, updateHistory = true) {
+		$.ajax('/api/note', {
+			method: 'GET',
+			dataType: 'json',
+			data: {
+				notebook: notebook,
+				note: note
+			}
+		}).done(function(data) {
+			// breadcrumb
+			$('#sidebar .breadcrumb').html('<li><a href="/">Home</a></li>')
+				.append('<li><a href="/notebook/'+notebook+'">'+notebook+'</a></li>')
+				.append('<li>'+note+'</li>');
+			// notes
+			//navLoadNotebook()
+
+			if (editNote !== note || editNotebook !== notebook) {
+				$('#document-title').val(data.note);
+				tinymce.activeEditor.setContent(data.noteData);
+				editNotebook = notebook;
+				editNote = note;
+			}
+			if (updateHistory) {
+				window.history.pushState({navLevel: 3, notebook:notebook, note:note}, 'nbnav', '/edit/'+notebook+'/'+note);
+			}
+
+			setSidebarEvents();
+		});
+	}
+	function setSidebarEvents() {
+		$('#sidebar .breadcrumb a[href="/"]').click(function(ev) {
+			ev.preventDefault();
+			navLoadHome();
+		});
+		$('#sidebar .breadcrumb a[href^="/notebook/"]').click(function(ev) {
+			ev.preventDefault();
+			navLoadNotebook($(this).attr('href').split('/')[2]);
+		});
+		$('.notebooks-list a').click(function(ev) {
+			ev.preventDefault();
+			let nb = getNotebook();
+			if (!nb) {
+				navLoadNotebook($(ev.target).text());
+			} else {
+				navLoadNote(nb, $(ev.target).text());
+			}
+		});
+	}
+	setSidebarEvents();
+
 	window.onpopstate = function(ev) {
 		// TODO: cache the search results?
-		if (ev.state) {
+		if (ev.state && ev.state.inputValue) {
 			$('input[name="searchbar"]').val(ev.state.inputValue);
+			console.log('asd');
 			searchFor(ev.state.inputValue, updateHistory = false);
 		} else {
 			$('input[name="searchbar"]').val('');
 			$('.search-results').hide(function(){
 				$(this).remove();
 			});
+		}
+
+		if (ev.state && ev.state.navLevel) {
+			if (ev.state.navLevel === 1) { navLoadHome(updateHistory = false); }
+			else if (ev.state.navLevel === 2) { navLoadNotebook(ev.state.navNb, updateHistory = false); }
+			else if (ev.state.navLevel === 3) { navLoadNote(ev.state.notebook, ev.state.note, updateHistory = false); }
 		}
 	};
 });

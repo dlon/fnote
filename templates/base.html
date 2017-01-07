@@ -20,7 +20,6 @@
 	
 	{% raw %}
 	<script id="searchbox-template" type="text/x-handlebars-template">
-		{{! TODO: add hr (or pseudo-element?) between search results }}
 		<a href="/edit/{{notebook}}/{{note}}">
 			<div class="searchbox">
 				<p class="search-file">{{notebook}}/{{note}}</p>
@@ -28,8 +27,41 @@
 			</div>
 		</a>
 	</script>
-	{% endraw %}
 	
+	<script id="notebooks-template" type="text/x-handlebars-template">
+		<div class="panel panel-primary">
+			<div class="panel-heading"><h1 class="panel-title">Recent</h1></div>
+			<div class="panel-body"></div>
+		</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading"><h1 class="panel-title">Notebooks</h1></div>
+			<div class="panel-body">
+			<ul class="nav nav-pills nav-stacked">
+				{{#each notebooks}}
+				<li role="presentation">
+					<a href="/notebook/{{this}}">{{this}}</a>
+				</li>
+				{{/each}}
+			</ul>
+			</div>
+		</div>
+	</script>
+	<script id="notelist-template" type="text/x-handlebars-template">
+		<div class="panel panel-primary">
+			<div class="panel-heading"><h1 class="panel-title">A</h1></div>
+			<div class="panel-body">
+			<ul class="nav nav-pills nav-stacked">
+				{{#each notes}}
+				<li role="presentation">
+					<a href="/edit/{{../notebook}}/{{this}}">{{this}}</a>
+				</li>
+				{{/each}}
+			</ul>
+			</div>
+		</div>
+	</script>
+	{% endraw %}
+
 	<script src="/static/freenote.js"></script>
 	<link rel="stylesheet" href="/static/freenote.css">
 </head>

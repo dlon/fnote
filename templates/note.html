@@ -2,8 +2,8 @@
 
 {% block breadcrumb %}
 <li><a href="/">Home</a></li>
-<li><a href="/notebook/{{ notebook }}" onclick="javascript:slideOutToRight($('.notebooks-list'));">{{ notebook }}</a></li>
-<li>Notebook 1</li>
+<li><a href="/notebook/{{ notebook }}">{{ notebook }}</a></li>
+<li>{{ note }}</li>
 {% endblock %}
 
 {% block notebooks_list %}
@@ -11,59 +11,9 @@
 	<div class="panel-heading"><h1 class="panel-title">A</h1></div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
-			<li role="presentation"><a href="#">Andrew W.K.</a></li>
-			<li role="presentation"><a href="#">Apparat</a></li>
-			<li role="presentation"><a href="#">Arcade Fire</a></li>
-			<li role="presentation"><a href="#">At The Drive-In</a></li>
-			<li role="presentation" class="active"><a href="#">Aziz Ansari</a></li>
-		</ul>
-	</div>
-</div>
-<div class="panel panel-primary">
-	<div class="panel-heading"><h1 class="panel-title">B</h1></div>
-	<div class="panel-body">
-		<ul class="nav nav-pills nav-stacked">
-			<li role="presentation"><a href="#">Andrew W.K.</a></li>
-			<li role="presentation"><a href="#">Apparat</a></li>
-			<li role="presentation"><a href="#">Arcade Fire</a></li>
-			<li role="presentation"><a href="#">At The Drive-In</a></li>
-			<li role="presentation"><a href="#">Aziz Ansari</a></li>
-		</ul>
-	</div>
-</div>
-<div class="panel panel-primary">
-	<div class="panel-heading"><h1 class="panel-title">C</h1></div>
-	<div class="panel-body">
-		<ul class="nav nav-pills nav-stacked">
-			<li role="presentation"><a href="#">Andrew W.K.</a></li>
-			<li role="presentation"><a href="#">Apparat</a></li>
-			<li role="presentation"><a href="#">Arcade Fire</a></li>
-			<li role="presentation"><a href="#">At The Drive-In</a></li>
-			<li role="presentation"><a href="#">Aziz Ansari</a></li>
-		</ul>
-	</div>
-</div>
-<div class="panel panel-primary">
-	<div class="panel-heading"><h1 class="panel-title">D</h1></div>
-	<div class="panel-body">
-		<ul class="nav nav-pills nav-stacked">
-			<li role="presentation"><a href="#">Andrew W.K.</a></li>
-			<li role="presentation"><a href="#">Apparat</a></li>
-			<li role="presentation"><a href="#">Arcade Fire</a></li>
-			<li role="presentation"><a href="#">At The Drive-In</a></li>
-			<li role="presentation"><a href="#">Aziz Ansari</a></li>
-		</ul>
-	</div>
-</div>
-<div class="panel panel-primary">
-	<div class="panel-heading"><h1 class="panel-title">E</h1></div>
-	<div class="panel-body">
-		<ul class="nav nav-pills nav-stacked">
-			<li role="presentation"><a href="#">Andrew W.K.</a></li>
-			<li role="presentation"><a href="#">Apparat</a></li>
-			<li role="presentation"><a href="#">Arcade Fire</a></li>
-			<li role="presentation"><a href="#">At The Drive-In</a></li>
-			<li role="presentation"><a href="#">Aziz Ansari</a></li>
+			{% for note in notes %}
+			<li role="presentation"><a href="/edit/{{ notebook }}/{{ note }}">{{ note }}</a></li>
+			{% endfor %}
 		</ul>
 	</div>
 </div>
