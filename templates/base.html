@@ -72,10 +72,10 @@
 			overflow-x:hidden;
 		}
 		#sidebar .breadcrumb {
-			height:30px; /* FIXME: don't use abs */
 			z-index:101;
 			position:sticky;
 			top:0;
+			margin:0;
 		}
 		.notebooks-list .panel {
 			margin:0;
@@ -95,12 +95,19 @@
 		#notebooks-wrapper {
 			position:relative;
 		}
+		#nav-tools {
+			padding:10px;
+		}
 		</style>
 		<ol class="breadcrumb">
 			{% block breadcrumb %}
 			<li>Home</li>
 			{% endblock %}
 		</ol>
+		<div id="nav-tools">
+			<a href="#" data-toggle="tooltip" data-placement="bottom" title="New note"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>
+			<a href="#" data-toggle="tooltip" data-placement="bottom" title="New notebook"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
+		</div>
 		<div id="notebooks-wrapper">
 			<div class="notebooks-list">
 				{% block notebooks_list %}{% endblock %}

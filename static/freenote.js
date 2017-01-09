@@ -14,6 +14,8 @@ function getNote() {
 $(document).ready(function() {
 	hbSearchboxTemplate = Handlebars.compile($('#searchbox-template').html());
 	
+	$('[data-toggle="tooltip"]').tooltip();
+	
 	var searchHistoryTimer = 0;
 	var hbSearchboxTemplate;
 	var editNotebook, editNote;
