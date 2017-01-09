@@ -96,24 +96,6 @@
 			position:relative;
 		}
 		</style>
-		<script>
-			function slideInToRight(e) {
-				$(e).css({left: -$(e).outerWidth()});
-				$(e).animate({left:0});
-			}
-			function slideOutToRight(e) {
-				$(e).animate({
-					left:$(e).outerWidth()
-					//left:'100px'
-				}, function() {
-					$(e).remove();
-				});
-				// test: slide other menu in
-				let f = e.clone();
-				f.appendTo('#notebooks-wrapper');
-				slideInToRight(f);
-			}
-		</script>
 		<ol class="breadcrumb">
 			{% block breadcrumb %}
 			<li>Home</li>
