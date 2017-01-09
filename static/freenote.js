@@ -1,54 +1,3 @@
-var searchHistoryTimer = 0;
-var hbSearchboxTemplate;
-
-function processJsonSearchData(data, searchStr, updateHistory=true) {
-	let searchRes = $('<div class="search-results"></div>');
-	$('#search-results-container').empty();
-	for (let v of data) {
-		// bolden matched text
-		let matchIndex = v.response.toLowerCase().indexOf(searchStr.toLowerCase()),
-			matchLen = searchStr.length;
-		v.response = v.response.slice(0, matchIndex)
-			+ "<strong>"+v.response.slice(matchIndex,matchIndex+matchLen)+"</strong>"
-			+ v.response.slice(matchIndex+matchLen);
-		// insert search result
-		searchRes.append($(hbSearchboxTemplate(v)))
-			.appendTo('#search-results-container');
-	}
-	// add hover effects
-	$('.searchbox').hover(function(){
-		$(this).animate({'background-color':"#eee"}, 200);
-	}, function(){
-		$(this).animate({'background-color':"#ddd"}, 200);
-	});
-
-	if (updateHistory) {
-		if (searchHistoryTimer) {
-			clearTimeout(searchHistoryTimer);
-		}
-		searchHistoryTimer = setTimeout(function() {
-			window.history.pushState({
-				inputValue:searchStr
-			}, 'search', '');
-		}, 1000);
-	}
-}
-function searchFor(str, updateHistory=true) {
-	$.ajax('/api/search', {
-		method: 'GET',
-		dataType: 'json',
-		data: {
-			q: str,
-			responseRadius: 50,
-			maxNumResults: 10
-		}
-	}).done(function(data) {
-		processJsonSearchData(data, str, updateHistory);
-	});
-}
-
-var editNotebook, editNote;
-
 function getNotebook() {
 	locArray = window.location.pathname.split('/');
 	if (locArray[1].toLowerCase() == 'edit' || locArray[1].toLowerCase() == 'notebook') {
@@ -64,9 +13,59 @@ function getNote() {
 
 $(document).ready(function() {
 	hbSearchboxTemplate = Handlebars.compile($('#searchbox-template').html());
+	
+	var searchHistoryTimer = 0;
+	var hbSearchboxTemplate;
+	var editNotebook, editNote;
 
 	editNotebook = getNotebook();
 	editNote = getNote();
+	
+	function processJsonSearchData(data, searchStr, updateHistory=true) {
+		let searchRes = $('<div class="search-results"></div>');
+		$('#search-results-container').empty();
+		for (let v of data) {
+			// bolden matched text
+			let matchIndex = v.response.toLowerCase().indexOf(searchStr.toLowerCase()),
+				matchLen = searchStr.length;
+			v.response = v.response.slice(0, matchIndex)
+				+ "<strong>"+v.response.slice(matchIndex,matchIndex+matchLen)+"</strong>"
+				+ v.response.slice(matchIndex+matchLen);
+			// insert search result
+			searchRes.append($(hbSearchboxTemplate(v)));
+		}
+		searchRes.appendTo('#search-results-container');
+		// add hover effects
+		$('.searchbox').hover(function(){
+			$(this).animate({'background-color':"#eee"}, 200);
+		}, function(){
+			$(this).animate({'background-color':"#ddd"}, 200);
+		});
+
+		if (updateHistory) {
+			if (searchHistoryTimer) {
+				clearTimeout(searchHistoryTimer);
+			}
+			searchHistoryTimer = setTimeout(function() {
+				window.history.pushState({
+					inputValue:searchStr
+				}, 'search', '');
+			}, 1000);
+		}
+	}
+	function searchFor(str, updateHistory=true) {
+		$.ajax('/api/search', {
+			method: 'GET',
+			dataType: 'json',
+			data: {
+				q: str,
+				responseRadius: 50,
+				maxNumResults: 10
+			}
+		}).done(function(data) {
+			processJsonSearchData(data, str, updateHistory);
+		});
+	}
 
 	// search
 	$('input[name="searchbar"]').keyup(function(ev) {
@@ -194,7 +193,7 @@ $(document).ready(function() {
 		end_container_on_empty_block: true
 	});
 	
-	// sidebar nav
+	// nav
 	var hbNotelistTemplate = Handlebars.compile($('#notelist-template').html());
 	var hbNotebooksTemplate = Handlebars.compile($('#notebooks-template').html());
 	function navLoadHome(updateHistory = true) {
