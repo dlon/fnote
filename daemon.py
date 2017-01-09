@@ -46,13 +46,17 @@ def index():
 @app.route('/notebook/<notebook>')
 @checkAuthIfSet
 def notebook(notebook):
-	notes = os.listdir('notes/%s/' % notebook) # FIXME: don't trust the input
+	nbDir = 'notes/%s/' % notebook
+	notes = os.listdir(nbDir) # FIXME: don't trust the input
+	notes.sort(key=lambda x: os.stat(os.path.join(nbDir, x)).st_mtime, reverse=True) # sort by mod date
 	return flask.render_template('notebook.html', notebook=notebook, notes=notes)
 
 @app.route('/edit/<notebook>/<note>')
 @checkAuthIfSet
 def noteRequest(notebook, note):
-	notes = os.listdir('notes/%s/' % notebook) # FIXME: don't trust the input
+	nbDir = 'notes/%s/' % notebook
+	notes = os.listdir(nbDir) # FIXME: don't trust the input
+	notes.sort(key=lambda x: os.stat(os.path.join(nbDir, x)).st_mtime, reverse=True) # sort by mod date
 	with open('notes/%s/%s' % (notebook, note)) as f:
 		# TODO: process the data in some way
 		return flask.render_template('note.html',
@@ -135,7 +139,9 @@ def apiGetNotebooks():
 @app.route('/api/notes', methods=['GET'])
 @checkAuthIfSet
 def apiGetNotes():
-	notes = os.listdir('notes/%s/' % flask.request.args['notebook'])
+	nbDir = 'notes/%s/' % flask.request.args['notebook']
+	notes = os.listdir(nbDir)
+	notes.sort(key=lambda x: os.stat(os.path.join(nbDir, x)).st_mtime, reverse=True) # sort by mod date
 	return flask.json.dumps({
 		'notebook': flask.request.args['notebook'],
 		'notes': notes
