@@ -41,6 +41,13 @@ $(document).ready(function() {
 		}, function(){
 			$(this).animate({'background-color':"#ddd"}, 200);
 		});
+		// load only the note (not entire page)
+		$('.search-results a').click(function(ev) {
+			ev.preventDefault();
+			var linkSplit = $(this).attr('href').split('/');
+			navLoadNote(linkSplit[2], linkSplit[3]);
+			$('.search-results').hide({});
+		});
 
 		if (updateHistory) {
 			if (searchHistoryTimer) {
@@ -82,9 +89,6 @@ $(document).ready(function() {
 		var elem = $('#search-wrapper');
 		if (!elem.is(e.target) && elem.has(e.target).length === 0) {
 			elem = $('.search-results'); // using #search-wrapper
-			/*elem.hide(function(){
-				$(this).remove();
-			});*/
 			elem.hide({});
 		}
 	});
