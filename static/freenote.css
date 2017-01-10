@@ -87,3 +87,9 @@ html, body {
 	width:20%;
 	text-align:right;
 }
+
+.error-message { /* alert */
+	position:fixed;
+	top:0;
+	z-index:200;
+}

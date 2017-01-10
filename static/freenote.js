@@ -73,6 +73,11 @@ $(document).ready(function() {
 			}
 		}).done(function(data) {
 			processJsonSearchData(data, str, updateHistory);
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error while searching (' + textStatus + ')'
+			}));
 		});
 	}
 
@@ -121,8 +126,12 @@ $(document).ready(function() {
 			lastSaveState = newSaveState;
 			$('#document-status').text('Saved.')
 				.delay(3000).fadeOut();
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error saving note "'+notebook+'/'+note+'" (' + textStatus + ')'
+			}));
 		});
-		// TODO: add error message
 		// TODO: add "last saved" info
 	};
 
@@ -202,6 +211,7 @@ $(document).ready(function() {
 	// nav
 	var hbNotelistTemplate = Handlebars.compile($('#notelist-template').html());
 	var hbNotebooksTemplate = Handlebars.compile($('#notebooks-template').html());
+	var hbAlertError = Handlebars.compile($('#alert-error-template').html());
 	function navLoadHome(updateHistory = true) {
 		$.ajax('/api/notebooks', {
 			method: 'GET',
@@ -218,6 +228,11 @@ $(document).ready(function() {
 			}
 
 			setSidebarEvents();
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error loading notebooks (' + textStatus + ')'
+			}));
 		});
 	}
 	function navLoadNotebook(notebook, updateHistory = true) {
@@ -240,6 +255,11 @@ $(document).ready(function() {
 			}
 
 			setSidebarEvents();
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error loading notebook "'+notebook+'" (' + textStatus + ')'
+			}));
 		});
 	}
 	function navLoadNote(notebook, note, updateHistory = true) {
@@ -271,6 +291,11 @@ $(document).ready(function() {
 			}
 
 			setSidebarEvents();
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error loading note "'+notebook+'/'+note+'" (' + textStatus + ')'
+			}));
 		});
 	}
 	function setSidebarEvents() {
@@ -308,6 +333,11 @@ $(document).ready(function() {
 				$('#document-notebook').val(activeNotebook).prop('selected', true);
 			}
 			$('#document-notebook').selectpicker('refresh');
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error loading notebooks (' + textStatus + ')'
+			}));
 		});
 	}
 	$('#document-notebook').change(function() {
@@ -325,6 +355,11 @@ $(document).ready(function() {
 			// TODO: change sidebar (at least breadcrumb) & URL
 			// TODO: create history event?
 			editNotebook = newNotebook;
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error moving/renaming note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
+			}));
 		});
 	});
 	reloadNotebooksSelect(editNotebook);
