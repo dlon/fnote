@@ -18,6 +18,9 @@
 	<!-- <script src="tinymce/jquery.tinymce.min.js"></script> -->
 	<script src="/static/upndown.bundle.min.js"></script>
 	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
+	
 	{% raw %}
 	<script id="searchbox-template" type="text/x-handlebars-template">
 		<a href="/edit/{{notebook}}/{{note}}">
@@ -132,6 +135,8 @@
 			<input id="document-title" placeholder="Title" value="{{ note }}">
 			<span id="document-status"></span>
 		</div>
+		<select id="document-notebook" class="selectpicker" data-live-search="true" title="Select a notebook">
+		</select>
 		<div id="toolbar-container"></div>
 		<div id="tinymce-area">{{ noteData|safe }}</div>
 	</div>

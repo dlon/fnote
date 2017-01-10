@@ -263,6 +263,8 @@ $(document).ready(function() {
 				tinymce.activeEditor.setContent(data.noteData);
 				editNotebook = notebook;
 				editNote = note;
+				
+				reloadNotebooksSelect(editNotebook);
 			}
 			if (updateHistory) {
 				window.history.pushState({navLevel: 3, notebook:notebook, note:note}, 'nbnav', '/edit/'+notebook+'/'+note);
@@ -291,6 +293,41 @@ $(document).ready(function() {
 		});
 	}
 	setSidebarEvents();
+	
+	// dropdown notebook setting
+	function reloadNotebooksSelect(activeNotebook = '') {
+		$.ajax('/api/notebooks', {
+			method: 'GET',
+			dataType: 'json'
+		}).done(function(data) {
+			$('#document-notebook').empty();
+			for (let nb of data.notebooks) {
+				$('#document-notebook').append($('<option></option>').text(nb));
+			}
+			if (activeNotebook) {
+				$('#document-notebook').val(activeNotebook).prop('selected', true);
+			}
+			$('#document-notebook').selectpicker('refresh');
+		});
+	}
+	$('#document-notebook').change(function() {
+		var newNotebook = $('#document-notebook option:selected').text();
+		$.ajax('/api/rename', {
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify({
+				sourceNotebook:editNotebook,
+				sourceNote:editNote,
+				targetNotebook:newNotebook,
+				targetNote:editNote
+			})
+		}).done(function(data) {
+			// TODO: change sidebar (at least breadcrumb) & URL
+			// TODO: create history event?
+			editNotebook = newNotebook;
+		});
+	});
+	reloadNotebooksSelect(editNotebook);
 
 	window.onpopstate = function(ev) {
 		// TODO: cache the search results?

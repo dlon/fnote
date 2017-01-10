@@ -190,6 +190,15 @@ def apiPutNote():
 		f.write(data)
 	return flask.json.dumps({'success':True})
 
+@app.route('/api/rename', methods=['PUT', 'POST'])
+@checkAuthIfSet
+def apiRenameNote():
+	jsData = flask.request.get_json()
+	# TODO: check whether the file/note already exists
+	os.rename('notes/%s/%s' % (jsData['sourceNotebook'], jsData['sourceNote']),
+		'notes/%s/%s' % (jsData['targetNotebook'], jsData['targetNote']))
+	return flask.json.dumps({'success':True})
+
 @app.route('/api/search')
 @checkAuthIfSet
 def apiSearch():
