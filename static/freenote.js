@@ -329,10 +329,10 @@ $(document).ready(function() {
 			for (let nb of data.notebooks) {
 				$('#document-notebook').append($('<option></option>').text(nb));
 			}
-			if (activeNotebook) {
-				$('#document-notebook').val(activeNotebook).prop('selected', true);
-			}
 			$('#document-notebook').selectpicker('refresh');
+			if (activeNotebook) {
+				$('#document-notebook').selectpicker('val', activeNotebook);
+			}
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
