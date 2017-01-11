@@ -129,7 +129,7 @@ $(document).ready(function() {
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
-				message: 'Error saving note "'+notebook+'/'+note+'" (' + textStatus + ')'
+				message: 'Error saving note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
 			}));
 		});
 		// TODO: add "last saved" info
