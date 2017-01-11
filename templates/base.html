@@ -76,6 +76,32 @@
 	<link rel="stylesheet" href="/static/freenote.css">
 </head>
 <body>
+<div class="modal fade" id="modal-new-note" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title">New note</h4>
+	  </div>
+	  <div class="modal-body">
+		<div id="m-note-fg-name" class="form-group">
+			<label class="control-label" for="m-note-name">Name:</label>
+			<input id="m-note-name" placeholder="Enter a note name" class="form-control">
+			<span class="help-block"></span>
+		</div>
+		<div id="m-note-fg-nb" class="form-group">
+			<label class="control-label" for="m-note-selected-notebook">Notebook:</label>
+			<select id="m-note-selected-notebook" class="selectpicker form-control" data-live-search="true" title="Select a notebook"></select>
+			<span class="help-block"></span>
+		</div>
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		<button name="add" type="button" class="btn btn-primary">Add</button>
+	  </div>
+	</div>
+	</div>
+</div>
 	<div id="sidebar">
 		<style>
 		#sidebar {
@@ -115,8 +141,10 @@
 			{% endblock %}
 		</ol>
 		<div id="nav-tools">
-			<a href="#" data-toggle="tooltip" data-placement="bottom" title="New note"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>
-			<a href="#" data-toggle="tooltip" data-placement="bottom" title="New notebook"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
+			<a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="New note"><span class="glyphicon glyphicon-file"
+				aria-hidden="true" data-toggle="modal" data-target="#modal-new-note"></span></a>
+			<a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="New notebook"><span class="glyphicon glyphicon-book"
+				aria-hidden="true" data-toggle="modal" data-target="#modal-new-notebook"></span></a>
 		</div>
 		<div id="notebooks-wrapper">
 			<div class="notebooks-list">

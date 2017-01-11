@@ -13,16 +13,16 @@ function getNote() {
 
 $(document).ready(function() {
 	hbSearchboxTemplate = Handlebars.compile($('#searchbox-template').html());
-	
+
 	$('[data-toggle="tooltip"]').tooltip();
-	
+
 	var searchHistoryTimer = 0;
 	var hbSearchboxTemplate;
 	var editNotebook, editNote;
 
 	editNotebook = getNotebook();
 	editNote = getNote();
-	
+
 	function processJsonSearchData(data, searchStr, updateHistory=true) {
 		let searchRes = $('<div class="search-results"></div>');
 		$('#search-results-container').empty();
@@ -271,6 +271,8 @@ $(document).ready(function() {
 				note: note
 			}
 		}).done(function(data) {
+			// TODO: save the existing note?
+
 			// breadcrumb
 			$('#sidebar .breadcrumb').html('<li><a href="/">Home</a></li>')
 				.append('<li><a href="/notebook/'+notebook+'">'+notebook+'</a></li>')
@@ -364,6 +366,80 @@ $(document).ready(function() {
 	});
 	reloadNotebooksSelect(editNotebook);
 
+	// modal dialogs
+	$('#modal-new-note').on('show.bs.modal', function (e) {
+		//$('input', this).val('');
+		let selectElem = $('#m-note-selected-notebook');
+		$.ajax('/api/notebooks', {
+			method: 'GET',
+			dataType: 'json'
+		}).done(function(data) {
+			selectElem.empty();
+			for (let nb of data.notebooks) {
+				selectElem.append($('<option></option>').text(nb));
+			}
+			selectElem.selectpicker('refresh');
+			if (editNotebook) {
+				selectElem.selectpicker('val', editNotebook);
+			}
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error loading notebooks (' + textStatus + ')'
+			}));
+			$('#modal-new-note').modal('hide');
+		});
+	});
+	$('#modal-new-note').on('shown.bs.modal', function (e) {
+		$('input', this).select();
+	});
+	$('#modal-new-note button[name="add"]').click(function(ev) {
+		// TODO: FIXME: make sure the note doesn't already exist
+		
+		var tNote = $('#m-note-name').val();
+		var tNb = $('#m-note-selected-notebook').val();
+		if (!tNote) {
+			$('#m-note-fg-name').addClass('has-error');
+			$('#m-note-fg-name .help-block').text('You must name the note');
+		} else {
+			$('#m-note-fg-name').removeClass('has-error');
+			$('#m-note-fg-name .help-block').text('');
+		}
+		if (!tNb) {
+			$('#m-note-fg-nb').addClass('has-error');
+			$('#m-note-fg-nb .help-block').text('You must select a notebook');
+		} else {
+			$('#m-note-fg-nb').removeClass('has-error');
+			$('#m-note-fg-nb .help-block').text('');
+		}
+		if (!tNote || !tNb) {
+			return;
+		}
+
+		// TODO: check whether it already exists
+		// if it does, add an error message below the note name as above
+
+		// create an empty note
+		$.ajax('/api/note?notebook='+tNb+'&note='+tNote, {
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify({
+				data: ''
+			})
+		}).done(function(data) {
+			navLoadNote(tNb, tNote);
+			$('#modal-new-note').modal('hide');
+			$('#m-note-name').val('');
+			// FIXME: make sure this is the proper way to reload the sidebar
+			navLoadNotebook(tNb, updateHistory=false);
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error saving note "'+tNb+'/'+tNote+'" (' + textStatus + ')'
+			}));
+		});
+	});
+	
 	window.onpopstate = function(ev) {
 		// TODO: cache the search results?
 		if (ev.state && ev.state.inputValue) {
