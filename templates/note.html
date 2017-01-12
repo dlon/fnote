@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title_tag %}<title>{{ note }} - Freenote</title> {% endblock %}
+
 {% block breadcrumb %}
 <li><a href="/">Home</a></li>
 <li><a href="/notebook/{{ notebook }}">{{ notebook }}</a></li>

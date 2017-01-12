@@ -288,6 +288,7 @@ $(document).ready(function() {
 				
 				reloadNotebooksSelect(editNotebook);
 			}
+			document.title = note + ' - Freenote';
 			if (updateHistory) {
 				window.history.pushState({navLevel: 3, notebook:notebook, note:note}, 'nbnav', '/edit/'+notebook+'/'+note);
 			}
