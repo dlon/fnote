@@ -190,6 +190,14 @@ def apiPutNote():
 		f.write(data)
 	return flask.json.dumps({'success':True})
 
+@app.route('/api/notebook', methods=['PUT', 'POST'])
+@checkAuthIfSet
+def apiPutNotebook():
+	if not os.path.exists('notes/'):
+		os.mkdir('notes/')
+	os.mkdir('notes/%s' % flask.request.args['notebook'])
+	return flask.json.dumps({'success':True})
+
 @app.route('/api/rename', methods=['PUT', 'POST'])
 @checkAuthIfSet
 def apiRenameNote():

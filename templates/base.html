@@ -103,6 +103,27 @@
 	</div>
 	</div>
 </div>
+<div class="modal fade" id="modal-new-notebook" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title">New notebook</h4>
+	  </div>
+	  <div class="modal-body">
+		<div id="m-notebook-fg-name" class="form-group">
+			<label class="control-label" for="m-notebook-name">Name:</label>
+			<input id="m-notebook-name" placeholder="Name the new notebook" class="form-control">
+			<span class="help-block"></span>
+		</div>
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		<button name="add" type="button" class="btn btn-primary">Add</button>
+	  </div>
+	</div>
+	</div>
+</div>
 	<div id="sidebar">
 		<ol class="breadcrumb">
 			{% block breadcrumb %}

@@ -440,6 +440,35 @@ $(document).ready(function() {
 			}));
 		});
 	});
+	$('#modal-new-notebook button[name="add"]').click(function(ev) {
+		// TODO: list existing notebooks?
+		var tNb = $('#m-notebook-name').val();
+		if (!tNb) {
+			$('#m-note-fg-nb').addClass('has-error');
+			$('#m-note-fg-nb .help-block').text('You name the notebook');
+			return;
+		} else {
+			$('#m-note-fg-nb').removeClass('has-error');
+			$('#m-note-fg-nb .help-block').text('');
+		}
+		// create notebook
+		$.ajax('/api/notebook?notebook='+tNb, {
+			method: 'POST'
+		}).done(function(data) {
+			$('#modal-new-notebook').modal('hide');
+			$('#m-notebook-name').val('');
+			// FIXME: make sure this is the proper way to reload the sidebar
+			navLoadNotebook(tNb);
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error creating notebook "'+tNb+'" (' + textStatus + ')'
+			}));
+		});
+	});
+	$('#modal-new-notebook').on('shown.bs.modal', function (e) {
+		$('input', this).select();
+	});
 	
 	window.onpopstate = function(ev) {
 		// TODO: cache the search results?
