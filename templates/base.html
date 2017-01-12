@@ -12,7 +12,6 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
 	<!-- bootstrap -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> <!-- FIXME: optional: use both? -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	
 	<script src="/static/tinymce/tinymce.min.js"></script>
@@ -124,6 +123,22 @@
 	</div>
 	</div>
 </div>
+<div class="modal fade" id="modal-confirm-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Delete note
+            </div>
+            <div class="modal-body">
+                Are you sure you wish to delete this note?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
 	<div id="sidebar">
 		<ol class="breadcrumb">
 			{% block breadcrumb %}
@@ -162,6 +177,11 @@
 		</div>
 		<select id="document-notebook" class="selectpicker" data-live-search="true" title="Select a notebook">
 		</select>
+		<span data-toggle="modal" data-target="#modal-confirm-delete">
+			<button id="document-delete" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Delete note">
+				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			</button>
+		</span>
 		<div id="toolbar-container"></div>
 		<div id="tinymce-area">{{ noteData|safe }}</div>
 	</div>

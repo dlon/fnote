@@ -469,6 +469,24 @@ $(document).ready(function() {
 	$('#modal-new-notebook').on('shown.bs.modal', function (e) {
 		$('input', this).select();
 	});
+	$('#modal-confirm-delete .btn-ok').click(function(ev) {
+		// FIXME: make sure we have a note open
+		// delete note
+		$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
+			method: 'DELETE',
+			dataType: 'json'
+		}).done(function(data) {
+			// FIXME: is this how we want to update the UI?
+			$('#modal-confirm-delete').modal('hide');
+			navLoadHome();
+			// TODO: unload the current note
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error deleting note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
+			}));
+		});
+	});
 	
 	window.onpopstate = function(ev) {
 		// TODO: cache the search results?
