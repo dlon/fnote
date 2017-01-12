@@ -104,38 +104,6 @@
 	</div>
 </div>
 	<div id="sidebar">
-		<style>
-		#sidebar {
-			overflow-x:hidden;
-		}
-		#sidebar .breadcrumb {
-			z-index:101;
-			position:sticky;
-			top:0;
-			margin:0;
-		}
-		.notebooks-list .panel {
-			margin:0;
-		}
-		.notebooks-list .panel-heading {
-			position:sticky;
-			opacity:0.9;
-			top:30px; /* FIXME: don't use abs */
-			z-index:100;
-		}
-		.notebooks-list {
-			position:absolute; /* for sliding animation */
-			top:0;
-			left:0;
-			width:100%;
-		}
-		#notebooks-wrapper {
-			position:relative;
-		}
-		#nav-tools {
-			padding:10px;
-		}
-		</style>
 		<ol class="breadcrumb">
 			{% block breadcrumb %}
 			<li>Home</li>
