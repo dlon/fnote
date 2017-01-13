@@ -394,7 +394,8 @@ $(document).ready(function() {
 	$('#modal-new-note').on('shown.bs.modal', function (e) {
 		$('input', this).select();
 	});
-	$('#modal-new-note button[name="add"]').click(function(ev) {
+	$('#modal-new-note form').submit(function(ev) {
+		ev.preventDefault();
 		// TODO: FIXME: make sure the note doesn't already exist
 		
 		var tNote = $('#m-note-name').val();
@@ -440,7 +441,8 @@ $(document).ready(function() {
 			}));
 		});
 	});
-	$('#modal-new-notebook button[name="add"]').click(function(ev) {
+	$('#modal-new-notebook form').submit(function(ev) {
+		ev.preventDefault();
 		// TODO: list existing notebooks?
 		var tNb = $('#m-notebook-name').val();
 		if (!tNb) {
