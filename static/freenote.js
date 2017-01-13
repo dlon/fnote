@@ -236,6 +236,10 @@ $(document).ready(function() {
 		});
 	}
 	function navLoadNotebook(notebook, updateHistory = true) {
+		if (!notebook) {
+			navLoadHome(updateHistory);
+			return;
+		}
 		$.ajax('/api/notes', {
 			method: 'GET',
 			dataType: 'json',
@@ -488,9 +492,8 @@ $(document).ready(function() {
 			method: 'DELETE',
 			dataType: 'json'
 		}).done(function(data) {
-			// FIXME: is this how we want to update the UI?
 			$('#modal-confirm-delete').modal('hide');
-			navLoadHome();
+			navLoadNotebook(getNotebook());
 			// TODO: unload the current note
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
