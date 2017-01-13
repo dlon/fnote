@@ -6,6 +6,8 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # FIXME: remove. for instantaneous u
 
 import os
 import re
+import markdown
+import html2text
 
 # set user and password to enable HTTP basic authentication
 from functools import wraps
@@ -61,7 +63,9 @@ def noteRequest(notebook, note):
 		# TODO: process the data in some way
 		return flask.render_template('note.html',
 			notebook=notebook, note=note,
-			noteData=f.read(), notes=notes)
+			noteData=markdown.markdown(f.read().decode('utf8'),
+				output_format='html5'),
+			notes=notes)
 
 ''' API '''
 	
@@ -151,13 +155,13 @@ def apiGetNotes():
 @checkAuthIfSet
 def apiGetNote():
 	'''returns an entire unprocessed note file in a json object'''
-	# TODO: process markdown into HTML, if requested?
 	# FIXME: not safe to trust client-provided strings in path str
 	with open('notes/%s/%s' % (flask.request.args['notebook'], flask.request.args['note'])) as f:
 		return flask.json.dumps({
 			'note': flask.request.args['note'],
 			'notebook': flask.request.args['notebook'],
-			'noteData': f.read()})
+			'noteData': markdown.markdown(f.read().decode('utf8'),
+				output_format='html5')})
 
 @app.route('/api/note', methods=['DELETE'])
 @checkAuthIfSet
@@ -185,6 +189,10 @@ def apiPutNote():
 	if not os.path.exists('notes/%s' % flask.request.args['notebook']):
 		os.mkdir('notes/%s' % flask.request.args['notebook'])
 	data = flask.request.get_json()['data']
+	parser = html2text.HTML2Text()
+	parser.unicode_snob = True
+	data = parser.handle(data.decode('utf8'))
+	data = data.encode('utf8')
 	with open("notes/%s/%s" % (flask.request.args['notebook'],
 		flask.request.args['note']), "w") as f:
 		f.write(data)

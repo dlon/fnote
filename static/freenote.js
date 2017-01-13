@@ -153,7 +153,7 @@ $(document).ready(function() {
 		// fullpage: metadata
 		//toolbar: 'undo redo | styleselect | formats | bold italic unline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | forecolor backcolor | codesample code print', //  insert | styleselect
 		//toolbar2: 'print preview | forecolor backcolor | codesample code',
-		toolbar: "undo redo | styleselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent table | link image media | codesample code print insert fullscreen", // symbols disappeared in 'light' - obsolete?
+		toolbar: "undo redo | styleselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent table | link image media | codesample print insert fullscreen", // symbols disappeared in 'light' - obsolete?
 		image_advtab: true,
 		templates: [
 			{ title: 'Test template 1', content: 'Test 1' },
