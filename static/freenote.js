@@ -297,7 +297,7 @@ $(document).ready(function() {
 				window.history.pushState({navLevel: 3, notebook:notebook, note:note}, 'nbnav', '/edit/'+notebook+'/'+note);
 			}
 
-			setSidebarEvents();
+			setSidebarEvents(reloadNotelinks=false);
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
@@ -305,7 +305,7 @@ $(document).ready(function() {
 			}));
 		});
 	}
-	function setSidebarEvents() {
+	function setSidebarEvents(reloadNotelinks=true) {
 		$('#sidebar .breadcrumb a[href="/"]').click(function(ev) {
 			ev.preventDefault();
 			navLoadHome();
@@ -314,15 +314,17 @@ $(document).ready(function() {
 			ev.preventDefault();
 			navLoadNotebook($(this).attr('href').split('/')[2]);
 		});
-		$('.notebooks-list a').click(function(ev) {
-			ev.preventDefault();
-			let nb = getNotebook();
-			if (!nb) {
-				navLoadNotebook($(ev.target).text());
-			} else {
-				navLoadNote(nb, $(ev.target).text());
-			}
-		});
+		if (reloadNotelinks) {
+			$('.notebooks-list a').click(function(ev) {
+				ev.preventDefault();
+				let nb = getNotebook();
+				if (!nb) {
+					navLoadNotebook($(ev.target).text());
+				} else {
+					navLoadNote(nb, $(ev.target).text());
+				}
+			});
+		}
 	}
 	setSidebarEvents();
 	
