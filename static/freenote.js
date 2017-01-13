@@ -446,12 +446,12 @@ $(document).ready(function() {
 		// TODO: list existing notebooks?
 		var tNb = $('#m-notebook-name').val();
 		if (!tNb) {
-			$('#m-note-fg-nb').addClass('has-error');
-			$('#m-note-fg-nb .help-block').text('You name the notebook');
+			$('#m-notebook-fg-name').addClass('has-error');
+			$('#m-notebook-fg-name .help-block').text('You name the notebook');
 			return;
 		} else {
-			$('#m-note-fg-nb').removeClass('has-error');
-			$('#m-note-fg-nb .help-block').text('');
+			$('#m-notebook-fg-name').removeClass('has-error');
+			$('#m-notebook-fg-name .help-block').text('');
 		}
 		// create notebook
 		$.ajax('/api/notebook?notebook='+tNb, {
