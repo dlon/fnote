@@ -369,6 +369,11 @@ $(document).ready(function() {
 
 	// modal dialogs
 	$('#modal-new-note').on('show.bs.modal', function (e) {
+		$('#m-note-fg-name').removeClass('has-error');
+		$('#m-note-fg-nb').removeClass('has-error');
+		$('#m-note-fg-name .help-block').text('');
+		$('#m-note-fg-nb .help-block').text('');
+
 		//$('input', this).val('');
 		let selectElem = $('#m-note-selected-notebook');
 		$.ajax('/api/notebooks', {
@@ -467,6 +472,10 @@ $(document).ready(function() {
 				message: 'Error creating notebook "'+tNb+'" (' + textStatus + ')'
 			}));
 		});
+	});
+	$('#modal-new-notebook').on('show.bs.modal', function (e) {
+		$('#m-notebook-fg-name').removeClass('has-error');
+		$('#m-notebook-fg-name .help-block').text('');
 	});
 	$('#modal-new-notebook').on('shown.bs.modal', function (e) {
 		$('input', this).select();
