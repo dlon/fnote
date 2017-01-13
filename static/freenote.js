@@ -385,8 +385,9 @@ $(document).ready(function() {
 				selectElem.append($('<option></option>').text(nb));
 			}
 			selectElem.selectpicker('refresh');
-			if (editNotebook) {
-				selectElem.selectpicker('val', editNotebook);
+			let nb = getNotebook();
+			if (nb) {
+				selectElem.selectpicker('val', nb);
 			}
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
