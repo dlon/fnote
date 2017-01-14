@@ -7,7 +7,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # FIXME: remove. for instantaneous u
 import os
 import re
 import markdown
-import html2text
+import html2markdown
 
 # set user and password to enable HTTP basic authentication
 from functools import wraps
@@ -40,6 +40,12 @@ def checkAuthIfSet(f):
 
 ''' UI '''
 
+mdExtensions = [
+	'markdown.extensions.extra',
+	'markdown.extensions.nl2br',
+	'markdown.extensions.smarty'
+]
+
 @app.route('/')
 @checkAuthIfSet
 def index():
@@ -64,7 +70,8 @@ def noteRequest(notebook, note):
 		return flask.render_template('note.html',
 			notebook=notebook, note=note,
 			noteData=markdown.markdown(f.read().decode('utf8'),
-				output_format='html5'),
+				output_format='html5',
+				extensions=mdExtensions),
 			notes=notes)
 
 ''' API '''
@@ -161,7 +168,8 @@ def apiGetNote():
 			'note': flask.request.args['note'],
 			'notebook': flask.request.args['notebook'],
 			'noteData': markdown.markdown(f.read().decode('utf8'),
-				output_format='html5')})
+				output_format='html5',
+				extensions=mdExtensions)})
 
 @app.route('/api/note', methods=['DELETE'])
 @checkAuthIfSet
@@ -189,10 +197,7 @@ def apiPutNote():
 	if not os.path.exists('notes/%s' % flask.request.args['notebook']):
 		os.mkdir('notes/%s' % flask.request.args['notebook'])
 	data = flask.request.get_json()['data']
-	parser = html2text.HTML2Text()
-	parser.unicode_snob = True
-	data = parser.handle(data.decode('utf8'))
-	data = data.encode('utf8')
+	data = html2markdown.toMarkdown(data).encode('utf8')
 	with open("notes/%s/%s" % (flask.request.args['notebook'],
 		flask.request.args['note']), "w") as f:
 		f.write(data)
