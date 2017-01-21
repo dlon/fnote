@@ -300,10 +300,10 @@ $(document).ready(function() {
 			ev.preventDefault();
 			navLoadNotebook($(this).attr('href').split('/')[2]);
 		});
+		let nb = getNotebook();
 		if (reloadNotelinks) {
 			$('.notebooks-list a').click(function(ev) {
 				ev.preventDefault();
-				let nb = getNotebook();
 				if (!nb) {
 					navLoadNotebook($(ev.target).text());
 				} else {
