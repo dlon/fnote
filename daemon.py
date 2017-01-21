@@ -181,7 +181,11 @@ def apiDeleteNote():
 	if not os.path.exists('deleted/%s/' % flask.request.args['notebook']):
 		os.mkdir('deleted/%s/' % flask.request.args['notebook'])
 	combinedPath = '%s/%s' % (flask.request.args['notebook'], flask.request.args['note'])
-	os.rename('notes/%s' % combinedPath, 'deleted/%s' % combinedPath)
+	delPath = combinedPath
+	while os.path.exists('deleted/%s' % delPath):
+		# conflicting notes
+		delPath += '_'
+	os.rename('notes/%s' % combinedPath, 'deleted/%s' % delPath)
 	return flask.json.dumps({'success':True})
 
 @app.route('/api/note', methods=['PUT', 'POST'])
