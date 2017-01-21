@@ -374,6 +374,40 @@ $(document).ready(function() {
 	});
 	reloadNotebooksSelect(editNotebook);
 
+	// editing the title/file name
+	var renamingTimer = 0;
+	$('#document-title').keydown(function(ev) {
+		// TODO: only update if changed
+		// TODO: update UI
+		if (renamingTimer) {
+			clearTimeout(renamingTimer);
+		}
+		renamingTimer = setTimeout(function() {
+			let newNote = $('#document-title').val();
+			$.ajax('/api/rename', {
+				method: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					sourceNotebook:editNotebook,
+					sourceNote:editNote,
+					targetNotebook:editNotebook,
+					targetNote:newNote
+				})
+			}).done(function(data) {
+				// TODO: change sidebar & URL
+				// TODO: create history event?
+				editNote = newNote;
+				renamingTimer = 0;
+			}).fail(function(xhr, textStatus, errorThrown) {
+				$('#content').prepend(hbAlertError({
+					bolded: errorThrown,
+					message: 'Error moving/renaming note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
+				}));
+				renamingTimer = 0;
+			});
+		}, 500);
+	});
+
 	// modal dialogs
 	$('#modal-new-note').on('show.bs.modal', function (e) {
 		$('#m-note-fg-name').removeClass('has-error');
