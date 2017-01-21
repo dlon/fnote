@@ -70,6 +70,15 @@ html, body {
 	padding:20px;
 	overflow-x:auto;
 }
+#tinymce-area td {
+	width:50px;
+}
+#tinymce-area hr {
+	height:1px;
+	border:0;
+	background:#333;
+	background-image: linear-gradient(to right, #888, #333, #888);
+}
 
 #document-info {
 	padding:10px;
