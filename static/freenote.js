@@ -165,8 +165,8 @@ $(document).ready(function() {
 		fixed_toolbar_container:'#toolbar-container',
 		autofocus:true,
 		init_instance_callback: function() {
+			lastSaveState = tinymce.activeEditor.getContent();
 			tinymce.activeEditor.focus();
-			// TODO: save periodically (setInterval)
 		},
 		setup: function (editor) {
 			editor.on('blur', function () {
@@ -175,22 +175,23 @@ $(document).ready(function() {
 			editor.on('keyup', function(ev) {
 				if (ev.keyCode>=33 && ev.keyCode<=40) { // pgup, pgdown, end, home, & arrow keys
 					// arrows
-					return;
+					return true;
 				}
 				saveFunc(editor);
 			});
 			editor.on('change', function(ev){saveFunc(editor);}); // only updates when undo states are created
 			editor.on('keydown', function(ev) {
-				// tab indent
 				if (ev.keyCode == 9) {
-					if (ev.shiftKey) {
-						editor.execCommand('Outdent');
+					if (editor.selection.getNode().nodeName == 'TD') {
+						return true;
+					} else if (ev.ctrlKey) {
+						ev.preventDefault();
+						return false;
+					} else {
+						editor.execCommand('mceInsertContent', false, '&emsp;');
+						ev.preventDefault();
+						return false;
 					}
-					else {
-						editor.execCommand('Indent');
-					}
-					ev.preventDefault();
-					return false;
 				}
 			});
 		},
