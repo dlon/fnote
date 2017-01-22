@@ -46,6 +46,9 @@ $(document).ready(function() {
 		});
 		// load only the note (not entire page)
 		$('.search-results a').click(function(ev) {
+			if (ev.ctrlKey) {
+				return true;
+			}
 			ev.preventDefault();
 			var linkSplit = $(this).attr('href').split('/');
 			navLoadNote(linkSplit[2], linkSplit[3]);
@@ -305,12 +308,18 @@ $(document).ready(function() {
 			navLoadHome();
 		});
 		$('#sidebar .breadcrumb a[href^="/notebook/"]').click(function(ev) {
+			if (ev.ctrlKey) {
+				return true;
+			}
 			ev.preventDefault();
 			navLoadNotebook($(this).attr('href').split('/')[2]);
 		});
 		let nb = getNotebook();
 		if (reloadNotelinks) {
 			$('.notebooks-list a').click(function(ev) {
+				if (ev.ctrlKey) {
+					return true;
+				}
 				ev.preventDefault();
 				if (!nb) {
 					navLoadNotebook($(ev.target).text());
