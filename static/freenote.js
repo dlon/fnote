@@ -1,3 +1,16 @@
+function makeNoteUrl(newNotebook = '', newNote = '') {
+	locArray = window.location.pathname.split('/');
+	if (locArray[1].toLowerCase() !== 'edit') {
+		return window.location.pathname;
+	}
+	if (newNotebook) {
+		locArray[2] = newNotebook;
+	}
+	if (newNote) {
+		locArray[3] = newNote;
+	}
+	return locArray.join('/');
+}
 function getNotebook() {
 	locArray = window.location.pathname.split('/');
 	if (locArray[1].toLowerCase() == 'edit' || locArray[1].toLowerCase() == 'notebook') {
@@ -391,14 +404,19 @@ $(document).ready(function() {
 
 	// editing the title/file name
 	var renamingTimer = 0;
+	var isrenaming = false;
 	$('#document-title').keydown(function(ev) {
 		// TODO: only update if changed
-		// TODO: update UI
+		if (!editNote || !editNotebook || isrenaming) {
+			return;
+		}
 		if (renamingTimer) {
 			clearTimeout(renamingTimer);
 		}
 		renamingTimer = setTimeout(function() {
+			renamingTimer = 0;
 			let newNote = $('#document-title').val();
+			isrenaming = true;
 			$.ajax('/api/rename', {
 				method: 'POST',
 				contentType: 'application/json',
@@ -409,18 +427,34 @@ $(document).ready(function() {
 					targetNote:newNote
 				})
 			}).done(function(data) {
-				// TODO: change sidebar & URL
-				// TODO: create history event?
+				// update title, url & sidebar
+				if (getNotebook() === editNotebook) {
+					$('.notebooks-list a').each(function() {
+						if (editNote === $(this).text()) {
+							$(this).text(newNote);
+							$(this).attr('href', '/edit/'+editNotebook+'/'+newNote);
+						}
+					});
+				}
+				if (getNote() === editNote) {
+					$('.breadcrumb > li:last').text(newNote);
+				}
+				window.history.replaceState(
+					{navLevel: 3, notebook:editNotebook, note:newNote},
+					'nbnav',
+					makeNoteUrl(editNotebook, newNote)
+				);
+				document.title = newNote + ' - Freenote';
 				editNote = newNote;
-				renamingTimer = 0;
+				isrenaming = false;
 			}).fail(function(xhr, textStatus, errorThrown) {
 				$('#content').prepend(hbAlertError({
 					bolded: errorThrown,
 					message: 'Error moving/renaming note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
 				}));
-				renamingTimer = 0;
+				isrenaming = false;
 			});
-		}, 500);
+		}, 200);
 	});
 
 	// modal dialogs
