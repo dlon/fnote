@@ -223,7 +223,7 @@ $(document).ready(function() {
 			}));
 		});
 	}
-	function navLoadNotebook(notebook, updateHistory = true) {
+	function navLoadNotebook(notebook, updateHistory = true, loadBreadcrumb = true) {
 		if (!notebook) {
 			navLoadHome(updateHistory);
 			return;
@@ -235,7 +235,9 @@ $(document).ready(function() {
 				notebook: notebook
 			}
 		}).done(function(data) {
-			$('#sidebar .breadcrumb').html('<li><a href="/">Home</a></li>').append('<li>'+notebook+'</li>');
+			if (loadBreadcrumb) {
+				$('#sidebar .breadcrumb').html('<li><a href="/">Home</a></li>').append('<li>'+notebook+'</li>');
+			}
 			$('.notebooks-list').empty();
 			$('.notebooks-list').append(hbNotelistTemplate({
 				notes:data.notes,
@@ -273,9 +275,8 @@ $(document).ready(function() {
 			$('#sidebar .breadcrumb').html('<li><a href="/">Home</a></li>')
 				.append('<li><a href="/notebook/'+notebook+'">'+notebook+'</a></li>')
 				.append('<li>'+note+'</li>');
+			let oldNotebook = editNotebook;
 			// notes
-			//navLoadNotebook()
-
 			$('#document-title').val(data.note);
 			tinymce.activeEditor.setContent(data.noteData);
 			editNotebook = notebook;
@@ -287,6 +288,10 @@ $(document).ready(function() {
 			}
 			setSidebarEvents(reloadNotelinks=false);
 			restyleSidebarNotes();
+			// reload sidebar notebook (TODO: handle this differently? breadcrumb looks weird when in different notebook)
+			if (notebook !== oldNotebook) {
+				navLoadNotebook(notebook, updateHistory = false, loadBreadcrumb = false);
+			}
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
