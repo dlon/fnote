@@ -13,8 +13,10 @@
 	<div class="panel-heading"><h1 class="panel-title">{{ notebook }}</h1></div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
-			{% for note in notes %}
-			<li role="presentation"><a href="/edit/{{ notebook }}/{{ note }}">{{ note }}</a></li>
+			{% for note_ in notes %}
+			{% if note == note_ %}<li role="presentation" class="active"><a href="/edit/{{ notebook }}/{{ note }}">{{ note }}</a></li>
+			{% else %}<li role="presentation"><a href="/edit/{{ notebook }}/{{ note_ }}">{{ note_ }}</a></li>
+			{% endif %}
 			{% endfor %}
 		</ul>
 	</div>

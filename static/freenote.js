@@ -214,6 +214,7 @@ $(document).ready(function() {
 			}
 
 			setSidebarEvents();
+			restyleSidebarNotes();
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
@@ -245,6 +246,7 @@ $(document).ready(function() {
 			}
 
 			setSidebarEvents();
+			restyleSidebarNotes();
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
@@ -278,13 +280,12 @@ $(document).ready(function() {
 			editNotebook = notebook;
 			editNote = note;
 			reloadNotebooksSelect(editNotebook);
-
 			document.title = note + ' - Freenote';
 			if (updateHistory) {
 				window.history.pushState({navLevel: 3, notebook:notebook, note:note}, 'nbnav', '/edit/'+notebook+'/'+note);
 			}
-
 			setSidebarEvents(reloadNotelinks=false);
+			restyleSidebarNotes();
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
@@ -312,6 +313,19 @@ $(document).ready(function() {
 				}
 			});
 		}
+	}
+	function restyleSidebarNotes() {
+		if (!editNote || getNotebook() !== editNotebook) {
+			$('.notebooks-list li.active').removeClass('active');
+			return;
+		}
+		$('.notebooks-list li').each(function(i,e) {
+			if (editNote === $(this).children().text()) {
+				$(this).addClass('active');
+			} else {
+				$(this).removeClass('active');
+			}
+		});
 	}
 	setSidebarEvents();
 	
