@@ -22,6 +22,7 @@ $(document).ready(function() {
 
 	editNotebook = getNotebook();
 	editNote = getNote();
+	$('#document-title').val(editNote);
 
 	function processJsonSearchData(data, searchStr, updateHistory=true) {
 		let searchRes = $('<div class="search-results"></div>');
