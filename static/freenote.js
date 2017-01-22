@@ -253,6 +253,9 @@ $(document).ready(function() {
 		});
 	}
 	function navLoadNote(notebook, note, updateHistory = true) {
+		if (editNote === note && editNotebook === notebook) {
+			return;
+		}
 		$.ajax('/api/note', {
 			method: 'GET',
 			dataType: 'json',
@@ -270,14 +273,12 @@ $(document).ready(function() {
 			// notes
 			//navLoadNotebook()
 
-			if (editNote !== note || editNotebook !== notebook) {
-				$('#document-title').val(data.note);
-				tinymce.activeEditor.setContent(data.noteData);
-				editNotebook = notebook;
-				editNote = note;
-				
-				reloadNotebooksSelect(editNotebook);
-			}
+			$('#document-title').val(data.note);
+			tinymce.activeEditor.setContent(data.noteData);
+			editNotebook = notebook;
+			editNote = note;
+			reloadNotebooksSelect(editNotebook);
+
 			document.title = note + ' - Freenote';
 			if (updateHistory) {
 				window.history.pushState({navLevel: 3, notebook:notebook, note:note}, 'nbnav', '/edit/'+notebook+'/'+note);

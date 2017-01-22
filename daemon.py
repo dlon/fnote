@@ -201,7 +201,7 @@ def apiPutNote():
 	if not os.path.exists('notes/%s' % flask.request.args['notebook']):
 		os.mkdir('notes/%s' % flask.request.args['notebook'])
 	data = flask.request.get_json()['data']
-	data = html2markdown.toMarkdown(data).encode('utf8')
+	data = html2markdown.convert(data).encode('utf8')
 	with open("notes/%s/%s" % (flask.request.args['notebook'],
 		flask.request.args['note']), "w") as f:
 		f.write(data)
