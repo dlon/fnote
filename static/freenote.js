@@ -124,23 +124,31 @@ $(document).ready(function() {
 	var lastSaveState = null;
 	var isSaving = false;
 	var saveTimer = 0;
+	var saveFadeOutTimer = 0;
 	function stateHasChanged(editor) {
 		return editor.getContent() !== lastSaveState;
 	}
 	function saveFunc(editor) {
-		if (isSaving) {
-			return;
-		}
 		if (saveTimer) {
 			clearTimeout(saveTimer);
 		}
-		saveTimer = setTimeout(function() {
+		saveTimer = setTimeout(function sft() {
+			if (isSaving) {
+				setTimeout(sft, 500);
+				return;
+			}
+			saveTimer = 0;
 			if (!editNotebook || !editNote) {
 				return; // TODO: add error msg
 			}
 			var newSaveState = editor.getContent();
 			if (lastSaveState === newSaveState) {
 				return; // no changes were made
+			}
+			isSaving = true;
+			if (saveFadeOutTimer) {
+				clearTimeout(saveFadeOutTimer);
+				saveFadeOutTimer = 0;
 			}
 			$('#document-status').html('<span id="save-icon-spinner" class="fa fa-spinner fa-spin fa-fw"></span>').show();
 			$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
@@ -151,8 +159,8 @@ $(document).ready(function() {
 				})
 			}).done(function(data) {
 				lastSaveState = newSaveState;
-				$('#document-status').html('<span id="save-icon-done" class="fa fa-check-circle fa-fw"></span>')
-					.delay(1000).fadeOut();
+				var elm = $('#document-status').html('<span id="save-icon-done" class="fa fa-check-circle fa-fw"></span>');
+				saveFadeOutTimer = setTimeout(function(){elm.fadeOut();}, 1000);
 				let activeLi = $('.notebooks-list li.active');
 				if (!activeLi.is('.notebooks-list li:first')) {
 					activeLi.hide({always: function() {
@@ -161,14 +169,12 @@ $(document).ready(function() {
 					}});
 				}
 				isSaving = false;
-				saveTimer = 0;
 			}).fail(function(xhr, textStatus, errorThrown) {
 				$('#content').prepend(hbAlertError({
 					bolded: errorThrown,
 					message: 'Error saving note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
 				}));
 				isSaving = false;
-				saveTimer = 0;
 			});
 		}, 400);
 	}
