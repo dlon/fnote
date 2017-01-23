@@ -119,38 +119,47 @@ $(document).ready(function() {
 
 	//var lastSave = 0;
 	var lastSaveState = null;
-	var saveFunc = function(editor) {
-		if (!editNotebook || !editNote) {
-			return; // TODO: add error msg
-		}
-		/*if ($.now() - lastSave < 1000.0) {
-			// attempt save at most once per second
+	var isSaving = false;
+	var saveTimer = 0;
+	function saveFunc(editor) {
+		if (isSaving) {
 			return;
 		}
-		lastSave = $.now();*/
-		var newSaveState = editor.getContent();
-		if (lastSaveState === newSaveState) {
-			return; // no changes were made
+		if (saveTimer) {
+			clearTimeout(saveTimer);
 		}
-		$('#document-status').text('Saving...').show();
-		$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
-			method: 'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({
-				data: newSaveState
-			})
-		}).done(function(data) {
-			lastSaveState = newSaveState;
-			$('#document-status').text('Saved.')
-				.delay(3000).fadeOut();
-		}).fail(function(xhr, textStatus, errorThrown) {
-			$('#content').prepend(hbAlertError({
-				bolded: errorThrown,
-				message: 'Error saving note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
-			}));
-		});
-		// TODO: add "last saved" info
-	};
+		saveTimer = setTimeout(function() {
+			if (!editNotebook || !editNote) {
+				return; // TODO: add error msg
+			}
+			var newSaveState = editor.getContent();
+			if (lastSaveState === newSaveState) {
+				return; // no changes were made
+			}
+			$('#document-status').text('Saving...').show();
+			$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
+				method: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					data: newSaveState
+				})
+			}).done(function(data) {
+				lastSaveState = newSaveState;
+				$('#document-status').text('Saved.')
+					.delay(3000).fadeOut();
+				isSaving = false;
+				saveTimer = 0;
+			}).fail(function(xhr, textStatus, errorThrown) {
+				$('#content').prepend(hbAlertError({
+					bolded: errorThrown,
+					message: 'Error saving note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
+				}));
+				isSaving = false;
+				saveTimer = 0;
+			});
+			// TODO: add "last saved" info
+		}, 500);
+	}
 
 	tinymce.init({
 		selector: '#tinymce-area',
