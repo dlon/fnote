@@ -117,7 +117,6 @@ $(document).ready(function() {
 		}
 	});
 
-	//var lastSave = 0;
 	var lastSaveState = null;
 	var isSaving = false;
 	var saveTimer = 0;
@@ -147,6 +146,13 @@ $(document).ready(function() {
 				lastSaveState = newSaveState;
 				$('#document-status').text('Saved.')
 					.delay(3000).fadeOut();
+				let activeLi = $('.notebooks-list li.active');
+				if (!activeLi.is('.notebooks-list li:first')) {
+					activeLi.hide({always: function() {
+						$(this).detach().prependTo('.notebooks-list ul');
+						$(this).show({});
+					}});
+				}
 				isSaving = false;
 				saveTimer = 0;
 			}).fail(function(xhr, textStatus, errorThrown) {
@@ -157,7 +163,6 @@ $(document).ready(function() {
 				isSaving = false;
 				saveTimer = 0;
 			});
-			// TODO: add "last saved" info
 		}, 500);
 	}
 
@@ -182,7 +187,6 @@ $(document).ready(function() {
 			{ title: 'Test template 1', content: 'Test 1' },
 			{ title: 'Test template 2', content: 'Test 2' }
 		],
-		//setup: // FIXME: need the change event from below
 		inline:true,
 		fixed_toolbar_container:'#toolbar-container',
 		autofocus:true,
