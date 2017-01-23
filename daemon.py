@@ -75,7 +75,7 @@ def noteRequest(notebook, note):
 			notes=notes)
 
 ''' API '''
-	
+
 def indexIgnore(s, sub, ignoreChars):
 	'''find substring sub in string s. ignore chars in ignoreChars array.
 	returns index in s of first incidence of sub (-1 if no match)'''
@@ -97,7 +97,7 @@ def indexIgnore(s, sub, ignoreChars):
 			if c == sub[0]:
 				matchInd = 1
 	return -1
-	
+
 def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 	# TODO: implement note filter (last two parameters)
 	if not notebook and note:
@@ -107,23 +107,11 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 		return '[]'
 	matches = []
 	for path, dirs, files in os.walk('notes/'):
-		#print path, dirs, files
 		for file in files:
 			with open("%s/%s" % (path,file)) as f:
-				#lines = [line.strip() for line in f]
-				#print ''.join(lines)
-				noteData = f.read()
-				ind = indexIgnore(noteData.lower(), query.lower(), '\r\n')
+				noteData = f.read().decode('utf8')
+				ind = indexIgnore(noteData.lower(), query.lower(), u'\r\n')
 				if ind != -1:
-					'''
-					# dump the line(s) back (all lines that the match spans)
-					noteData = noteData.replace('\r','\n')
-					beginInd = noteData.rfind('\n', 0, ind) + 1
-					endInd = noteData.find('\n', ind)
-					if endInd == -1:
-						endInd = len(noteData)
-					return noteData[beginInd:endInd]
-					'''
 					isShortened = False
 					beginInd = max(0, ind-responseRadius)
 					endInd = min(ind+responseRadius+len(query), len(noteData))
@@ -133,8 +121,8 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 					matches += [{
 						'shortened': isShortened,
 						'response': response,
-						'notebook': path.replace('\\','/').split('/')[1], # FIXME: only works with perfect structure
-						'note': file
+						'notebook': path.replace(u'\\',u'/').split(u'/')[1].decode('latin1'), # FIXME: only works with perfect structure
+						'note': file.decode('latin1')
 					}]
 					if len(matches) >= int(maxNumResults):
 						return flask.json.dumps(matches)
