@@ -546,6 +546,7 @@ $(document).ready(function() {
 			$('#m-note-name').val('');
 			// FIXME: make sure this is the proper way to reload the sidebar
 			navLoadNotebook(tNb, updateHistory=false);
+			tinymce.activeEditor.focus();
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
