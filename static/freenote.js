@@ -38,8 +38,11 @@ $(document).ready(function() {
 	$('#document-title').val(editNote);
 
 	function processJsonSearchData(data, searchStr, updateHistory=true) {
-		let searchRes = $('<div class="search-results"></div>');
 		$('#search-results-container').empty();
+		if (!data.length) {
+			return;
+		}
+		let searchRes = $('<div class="search-results"></div>');
 		for (let v of data) {
 			// bolden matched text
 			let matchIndex = v.response.toLowerCase().indexOf(searchStr.toLowerCase()),
