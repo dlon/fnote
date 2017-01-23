@@ -120,6 +120,9 @@ $(document).ready(function() {
 	var lastSaveState = null;
 	var isSaving = false;
 	var saveTimer = 0;
+	function stateHasChanged(editor) {
+		return editor.getContent() !== lastSaveState;
+	}
 	function saveFunc(editor) {
 		if (isSaving) {
 			return;
@@ -618,6 +621,14 @@ $(document).ready(function() {
 			if (ev.state.navLevel === 1) { navLoadHome(updateHistory = false); }
 			else if (ev.state.navLevel === 2) { navLoadNotebook(ev.state.navNb, updateHistory = false); }
 			else if (ev.state.navLevel === 3) { navLoadNote(ev.state.notebook, ev.state.note, updateHistory = false); }
+		}
+	};
+
+	window.onbeforeunload = function(ev) {
+		if (stateHasChanged(tinymce.activeEditor)) {
+			var text_ = "You have unsaved changes. Are you sure?";
+			ev.returnValue = text_;
+			return text_;
 		}
 	};
 });
