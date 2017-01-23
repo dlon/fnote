@@ -138,7 +138,7 @@ $(document).ready(function() {
 			if (lastSaveState === newSaveState) {
 				return; // no changes were made
 			}
-			$('#document-status').text('Saving...').show();
+			$('#document-status').html('<span id="save-icon-spinner" class="fa fa-spinner fa-spin fa-fw"></span>').show();
 			$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
 				method: 'POST',
 				contentType: 'application/json',
@@ -147,8 +147,8 @@ $(document).ready(function() {
 				})
 			}).done(function(data) {
 				lastSaveState = newSaveState;
-				$('#document-status').text('Saved.')
-					.delay(3000).fadeOut();
+				$('#document-status').html('<span id="save-icon-done" class="fa fa-check-circle fa-fw"></span>')
+					.delay(1000).fadeOut();
 				let activeLi = $('.notebooks-list li.active');
 				if (!activeLi.is('.notebooks-list li:first')) {
 					activeLi.hide({always: function() {
@@ -166,7 +166,7 @@ $(document).ready(function() {
 				isSaving = false;
 				saveTimer = 0;
 			});
-		}, 500);
+		}, 400);
 	}
 
 	tinymce.init({
