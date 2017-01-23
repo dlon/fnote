@@ -44,6 +44,7 @@ $(document).ready(function() {
 		}
 		let searchRes = $('<div class="search-results"></div>');
 		for (let v of data) {
+			v.response = v.response.replace(/<(?:.|\n)*?>/gm, ''); // strip html
 			// bolden matched text
 			let matchIndex = v.response.toLowerCase().indexOf(searchStr.toLowerCase()),
 				matchLen = searchStr.length;
