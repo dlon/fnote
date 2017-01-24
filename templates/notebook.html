@@ -5,6 +5,10 @@
 <li>{{ notebook }}</li>
 {% endblock %}
 
+{% block nav_tools %}{{ super() }}
+<a href="javascript:void(0)" id="delete-nb" class="text-danger" data-toggle="tooltip" data-placement="bottom" title="Delete notebook"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-toggle="modal" data-target="#modal-delete-notebook"></span></a>
+{% endblock %}
+
 {% block notebooks_list %}
 <div class="panel panel-primary">
 	<div class="panel-heading"><h1 class="panel-title">{{ notebook }}</h1></div>

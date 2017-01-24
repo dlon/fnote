@@ -143,6 +143,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-delete-notebook" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Delete notebook
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you wish to delete this notebook?</p>
+				<p><strong>All of its notes will be lost.</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger btn-ok">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 	<div id="sidebar">
 		<ol class="breadcrumb">
 			{% block breadcrumb %}
@@ -150,10 +167,10 @@
 			{% endblock %}
 		</ol>
 		<div id="nav-tools">
-			<a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="New note"><span class="glyphicon glyphicon-file"
+			{% block nav_tools %}<a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="New note"><span class="glyphicon glyphicon-file"
 				aria-hidden="true" data-toggle="modal" data-target="#modal-new-note"></span></a>
 			<a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="New notebook"><span class="glyphicon glyphicon-book"
-				aria-hidden="true" data-toggle="modal" data-target="#modal-new-notebook"></span></a>
+				aria-hidden="true" data-toggle="modal" data-target="#modal-new-notebook"></span></a>{% endblock %}
 		</div>
 		<div id="notebooks-wrapper">
 			<div class="notebooks-list">

@@ -37,6 +37,12 @@ $(document).ready(function() {
 	editNote = getNote();
 	$('#document-title').val(editNote);
 
+	var deleteNotebookAnchor = $('#delete-nb');
+	if (!deleteNotebookAnchor) {
+		deleteNotebookAnchor = $('<a href="javascript:void(0)" id="delete-nb" class="text-danger" data-toggle="tooltip" data-placement="bottom" title="Delete notebook"></a>')
+			.append('<span class="glyphicon glyphicon-remove" aria-hidden="true" data-toggle="modal" data-target="#modal-delete-notebook"></span>');
+	}
+
 	function processJsonSearchData(data, searchStr, updateHistory=true) {
 		$('#search-results-container').empty();
 		if (!data.length) {
@@ -273,6 +279,8 @@ $(document).ready(function() {
 
 			setSidebarEvents();
 			restyleSidebarNotes();
+
+			deleteNotebookAnchor.detach();
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
@@ -307,6 +315,8 @@ $(document).ready(function() {
 
 			setSidebarEvents();
 			restyleSidebarNotes();
+
+			deleteNotebookAnchor.appendTo('#nav-tools');
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
 				bolded: errorThrown,
