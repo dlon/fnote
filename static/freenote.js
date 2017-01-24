@@ -44,13 +44,28 @@ $(document).ready(function() {
 		}
 		let searchRes = $('<div class="search-results"></div>');
 		for (let v of data) {
-			v.response = v.response.replace(/<(?:.|\n)*?>/gm, ''); // strip html
-			// bolden matched text
-			let matchIndex = v.response.toLowerCase().indexOf(searchStr.toLowerCase()),
-				matchLen = searchStr.length;
-			v.response = v.response.slice(0, matchIndex)
-				+ "<strong>"+v.response.slice(matchIndex,matchIndex+matchLen)+"</strong>"
-				+ v.response.slice(matchIndex+matchLen);
+			if (v.response) {
+				v.response = v.response.replace(/<(?:.|\n)*?>/gm, ''); // strip html
+				// bolden matched text
+				let matchIndex = v.response.toLowerCase().indexOf(searchStr.toLowerCase()),
+					matchLen = searchStr.length;
+				v.response = v.response.slice(0, matchIndex)
+					+ "<strong>"+v.response.slice(matchIndex,matchIndex+matchLen)+"</strong>"
+					+ v.response.slice(matchIndex+matchLen);
+			}
+			let matchLen = searchStr.length;
+			let matchIndex = v.notebook.toLowerCase().indexOf(searchStr.toLowerCase());
+			if (matchIndex !== -1) {
+				v.notebook = v.notebook.slice(0, matchIndex)
+					+ "<strong>"+v.notebook.slice(matchIndex,matchIndex+matchLen)+"</strong>"
+					+ v.notebook.slice(matchIndex+matchLen);
+			}
+			matchIndex = v.note.toLowerCase().indexOf(searchStr.toLowerCase());
+			if (matchIndex !== -1) {
+				v.note = v.note.slice(0, matchIndex)
+					+ "<strong>"+v.note.slice(matchIndex,matchIndex+matchLen)+"</strong>"
+					+ v.note.slice(matchIndex+matchLen);
+			}
 			// insert search result
 			searchRes.append($(hbSearchboxTemplate(v)));
 		}

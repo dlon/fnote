@@ -110,6 +110,7 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 		for file in files:
 			with open("%s/%s" % (path,file)) as f:
 				noteData = f.read().decode('utf8')
+				notebookIt = path.replace(u'\\',u'/').split(u'/')[1].decode('latin1') # FIXME: only works with perfect structure
 				ind = indexIgnore(noteData.lower(), query.lower(), u'\r\n')
 				if ind != -1:
 					isShortened = False
@@ -121,11 +122,20 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 					matches += [{
 						'shortened': isShortened,
 						'response': response,
-						'notebook': path.replace(u'\\',u'/').split(u'/')[1].decode('latin1'), # FIXME: only works with perfect structure
+						'notebook': notebookIt,
 						'note': file.decode('latin1')
 					}]
-					if len(matches) >= int(maxNumResults):
-						return flask.json.dumps(matches)
+				else:
+					ind1 = indexIgnore(notebookIt.lower(), query.lower(), u'\r\n')
+					ind2 = indexIgnore(file.decode('latin1').lower(), query.lower(), u'\r\n')
+					if ind1 != -1 or ind2 != -1:
+						matches += [{
+							'shortened': False,
+							'notebook': notebookIt,
+							'note': file.decode('latin1')
+						}]
+				if len(matches) >= int(maxNumResults):
+					return flask.json.dumps(matches)
 	return flask.json.dumps(matches)
 
 @app.route('/api/notebooks', methods=['GET'])
