@@ -142,7 +142,7 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 @checkAuthIfSet
 def apiGetNotebooks():
 	return flask.json.dumps({
-		'notebooks': [item for item in os.listdir('notes/') if os.path.isdir('notes/%s' % item)]
+		'notebooks': [item.decode('latin1') for item in os.listdir('notes/') if os.path.isdir('notes/%s' % item)]
 		})
 
 @app.route('/api/notes', methods=['GET'])
