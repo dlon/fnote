@@ -220,11 +220,11 @@ def apiDeleteNotebook():
 	# move the files to a trashbin in ./delete/
 	if not os.path.exists('deleted/'):
 		os.mkdir('deleted/')
-	delPath = '%s/' % flask.request.args['notebook']
+	delPath = flask.request.args['notebook']
 	while os.path.exists('deleted/%s' % delPath):
 		# conflicting notes
 		delPath += '_'
-	os.rename('notes/%s' % delPath, 'deleted/%s' % delPath)
+	os.rename('notes/%s/' % flask.request.args['notebook'], 'deleted/%s' % delPath)
 	return flask.json.dumps({'success':True})
 
 @app.route('/api/rename', methods=['PUT', 'POST'])
