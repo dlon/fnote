@@ -623,6 +623,10 @@ $(document).ready(function() {
 	$('#modal-new-notebook').on('shown.bs.modal', function (e) {
 		$('input', this).select();
 	});
+	$('#modal-delete-notebook').on('show.bs.modal', function (e) {
+		var p = $(this).find('.modal-body p:first');
+		p.text('Are you sure you wish to delete the notebook "'+getNotebook()+'"?');
+	});
 	$('#modal-confirm-delete .btn-ok').click(function(ev) {
 		// FIXME: make sure we have a note open
 		// delete note
