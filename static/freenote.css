@@ -49,6 +49,9 @@ html, body {
 	color:#000;
 	text-decoration: none;
 }
+.searchbox:hover {
+	background:#ccc;
+}
 .searchbox {
 	padding:5px 20px;
 }
