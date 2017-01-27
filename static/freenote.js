@@ -623,9 +623,29 @@ $(document).ready(function() {
 	$('#modal-new-notebook').on('shown.bs.modal', function (e) {
 		$('input', this).select();
 	});
+	var delNotebook = null;
 	$('#modal-delete-notebook').on('show.bs.modal', function (e) {
 		var p = $(this).find('.modal-body p:first');
-		p.text('Are you sure you wish to delete the notebook "'+getNotebook()+'"?');
+		delNotebook = getNotebook();
+		p.text('Are you sure you wish to delete the notebook "'+delNotebook+'"?');
+	});
+	$('#modal-delete-notebook .btn-ok').click(function (e) {
+		if (!delNotebook) {
+			return;
+		}
+		// delete notebook
+		$.ajax('/api/notebook?notebook='+delNotebook, {
+			method: 'DELETE',
+			dataType: 'json'
+		}).done(function(data) {
+			$('#modal-delete-notebook').modal('hide');
+			navLoadHome();
+		}).fail(function(xhr, textStatus, errorThrown) {
+			$('#content').prepend(hbAlertError({
+				bolded: errorThrown,
+				message: 'Error deleting notebook "'+delNotebook+'" (' + textStatus + ')'
+			}));
+		});
 	});
 	$('#modal-confirm-delete .btn-ok').click(function(ev) {
 		// FIXME: make sure we have a note open

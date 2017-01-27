@@ -213,6 +213,20 @@ def apiPutNotebook():
 	os.mkdir('notes/%s' % flask.request.args['notebook'])
 	return flask.json.dumps({'success':True})
 
+@app.route('/api/notebook', methods=['DELETE'])
+@checkAuthIfSet
+def apiDeleteNotebook():
+	# FIXME: not safe to trust client-provided strings in path str
+	# move the files to a trashbin in ./delete/
+	if not os.path.exists('deleted/'):
+		os.mkdir('deleted/')
+	delPath = '%s/' % flask.request.args['notebook']
+	while os.path.exists('deleted/%s' % delPath):
+		# conflicting notes
+		delPath += '_'
+	os.rename('notes/%s' % delPath, 'deleted/%s' % delPath)
+	return flask.json.dumps({'success':True})
+
 @app.route('/api/rename', methods=['PUT', 'POST'])
 @checkAuthIfSet
 def apiRenameNote():
