@@ -49,7 +49,7 @@ mdExtensions = [
 @app.route('/')
 @checkAuthIfSet
 def index():
-	return flask.render_template('index.html', notebooks=os.listdir('notes/'))
+	return flask.render_template('index.html', notebooks=[dir.decode('latin1') for dir in os.listdir('notes/')])
 
 @app.route('/notebook/<notebook>')
 @checkAuthIfSet
