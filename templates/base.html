@@ -19,6 +19,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
 	<script src="https://use.fontawesome.com/b69c523192.js"></script>
 
+	<script>
+	{% if mtime %}var editMtime = {{ mtime }};
+	{% else %}var editMtime = 0;
+	{% endif %}
+	</script>
+
 	{% raw %}
 	<script id="searchbox-template" type="text/x-handlebars-template">
 		<a href="/edit/{{notebook_plain}}/{{note}}">

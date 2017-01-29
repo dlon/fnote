@@ -65,14 +65,16 @@ def noteRequest(notebook, note):
 	nbDir = 'notes/%s/' % notebook
 	notes = os.listdir(nbDir) # FIXME: don't trust the input
 	notes.sort(key=lambda x: os.stat(os.path.join(nbDir, x)).st_mtime, reverse=True) # sort by mod date
-	with open('notes/%s/%s' % (notebook, note)) as f:
+	path = 'notes/%s/%s' % (notebook, note)
+	with open(path) as f:
 		# TODO: process the data in some way
 		return flask.render_template('note.html',
 			notebook=notebook, note=note,
 			noteData=markdown.markdown(f.read().decode('utf8'),
 				output_format='html5',
 				extensions=mdExtensions),
-			notes=notes)
+			notes=notes,
+			mtime=os.path.getmtime(path))
 
 ''' API '''
 
@@ -161,13 +163,16 @@ def apiGetNotes():
 def apiGetNote():
 	'''returns an entire unprocessed note file in a json object'''
 	# FIXME: not safe to trust client-provided strings in path str
-	with open('notes/%s/%s' % (flask.request.args['notebook'], flask.request.args['note'])) as f:
+	path = 'notes/%s/%s' % (flask.request.args['notebook'], flask.request.args['note'])
+	with open(path) as f:
 		return flask.json.dumps({
 			'note': flask.request.args['note'],
 			'notebook': flask.request.args['notebook'],
 			'noteData': markdown.markdown(f.read().decode('utf8'),
 				output_format='html5',
-				extensions=mdExtensions)})
+				extensions=mdExtensions),
+			'mtime': os.path.getmtime(path),
+			})
 
 @app.route('/api/note', methods=['DELETE'])
 @checkAuthIfSet
@@ -191,19 +196,22 @@ def apiDeleteNote():
 def apiPutNote():
 	# set all data (which may be an empty string) exactly in the given notebook and note
 	# (they are created if they do not exist)
-	# TODO: backup (under some conditions) before modifying data?
 	# NOTE: json must be  stored as payload using mimetype application/json
 	#       not in query str
 	if not os.path.exists('notes/'):
 		os.mkdir('notes/')
 	if not os.path.exists('notes/%s' % flask.request.args['notebook']):
 		os.mkdir('notes/%s' % flask.request.args['notebook'])
+	path = "notes/%s/%s" % (flask.request.args['notebook'],
+		flask.request.args['note'])
+	if os.path.isfile(path):
+		if round(float(flask.request.args['mtime']), 2) < round(os.path.getmtime(path), 2):
+			flask.abort(403)
 	data = flask.request.get_json()['data']
 	data = html2markdown.convert(data).encode('utf8')
-	with open("notes/%s/%s" % (flask.request.args['notebook'],
-		flask.request.args['note']), "w") as f:
+	with open(path, "w") as f:
 		f.write(data)
-	return flask.json.dumps({'success':True})
+	return flask.json.dumps({'success':True, 'mtime':os.path.getmtime(path)})
 
 @app.route('/api/notebook', methods=['PUT', 'POST'])
 @checkAuthIfSet

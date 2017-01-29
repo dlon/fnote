@@ -173,13 +173,15 @@ $(document).ready(function() {
 				saveFadeOutTimer = 0;
 			}
 			$('#document-status').html('<span id="save-icon-spinner" class="fa fa-spinner fa-spin fa-fw"></span>').show();
-			$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
+			$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote+'&mtime='+editMtime, {
 				method: 'POST',
 				contentType: 'application/json',
+				dataType: 'json',
 				data: JSON.stringify({
 					data: newSaveState
 				})
 			}).done(function(data) {
+				editMtime = data.mtime;
 				lastSaveState = newSaveState;
 				var elm = $('#document-status').html('<span id="save-icon-done" class="fa fa-check-circle fa-fw"></span>');
 				saveFadeOutTimer = setTimeout(function(){elm.fadeOut();}, 1000);
@@ -349,6 +351,7 @@ $(document).ready(function() {
 			tinymce.activeEditor.setContent(data.noteData);
 			editNotebook = notebook;
 			editNote = note;
+			editMtime = data.mtime;
 			reloadNotebooksSelect(editNotebook);
 			document.title = note + ' - Freenote';
 			if (updateHistory) {
