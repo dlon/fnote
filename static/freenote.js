@@ -150,7 +150,7 @@ $(document).ready(function() {
 	function stateHasChanged(editor) {
 		return editor.getContent() !== lastSaveState;
 	}
-	function saveFunc(editor) {
+	function saveFunc(editor, override=false) {
 		if (saveTimer) {
 			clearTimeout(saveTimer);
 		}
@@ -178,7 +178,8 @@ $(document).ready(function() {
 				contentType: 'application/json',
 				dataType: 'json',
 				data: JSON.stringify({
-					data: newSaveState
+					data: newSaveState,
+					override: override,
 				})
 			}).done(function(data) {
 				editMtime = data.mtime;
@@ -678,7 +679,8 @@ $(document).ready(function() {
 			});
 		});
 		$('#modal-confirm-overwrite .btn-ok').click(function(ev) {
-			// TODO: save with override
+			$('#modal-confirm-overwrite').modal('hide');
+			saveFunc(tinymce.activeEditor, override=true);
 		});
 	});
 	

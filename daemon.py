@@ -217,10 +217,11 @@ def apiPutNote():
 		os.mkdir('notes/%s' % flask.request.args['notebook'])
 	path = "notes/%s/%s" % (flask.request.args['notebook'],
 		flask.request.args['note'])
-	if os.path.isfile(path):
+	json = flask.request.get_json()
+	if not json['override'] and os.path.isfile(path):
 		if round(float(flask.request.args['mtime']), 2) < round(os.path.getmtime(path), 2):
 			raise OverrideWarning(reason='old_mtime')
-	data = flask.request.get_json()['data']
+	data = json['data']
 	data = html2markdown.convert(data).encode('utf8')
 	with open(path, "w") as f:
 		f.write(data)
