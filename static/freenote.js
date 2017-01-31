@@ -348,8 +348,11 @@ $(document).ready(function() {
 				note: note
 			}
 		}).done(function(data) {
-			// TODO: save the existing note?
-
+			if (stateHasChanged(tinymce.activeEditor)) {
+				if (!window.confirm('You have unsaved changes. Are you sure?')) {
+					return;
+				}
+			}
 			// breadcrumb
 			$('#sidebar .breadcrumb').html('<li><a href="/">Home</a></li>')
 				.append('<li><a href="/notebook/'+notebook+'">'+notebook+'</a></li>')
