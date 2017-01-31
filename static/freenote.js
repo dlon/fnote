@@ -513,159 +513,161 @@ $(document).ready(function() {
 	});
 
 	// modal dialogs
-	$('#modal-new-note').on('show.bs.modal', function (e) {
-		$('#m-note-fg-name').removeClass('has-error');
-		$('#m-note-fg-nb').removeClass('has-error');
-		$('#m-note-fg-name .help-block').text('');
-		$('#m-note-fg-nb .help-block').text('');
-
-		//$('input', this).val('');
-		let selectElem = $('#m-note-selected-notebook');
-		$.ajax('/api/notebooks', {
-			method: 'GET',
-			dataType: 'json'
-		}).done(function(data) {
-			selectElem.empty();
-			for (let nb of data.notebooks) {
-				selectElem.append($('<option></option>').text(nb));
-			}
-			selectElem.selectpicker('refresh');
-			let nb = getNotebook();
-			if (nb) {
-				selectElem.selectpicker('val', nb);
-			}
-		}).fail(function(xhr, textStatus, errorThrown) {
-			$('#content').prepend(hbAlertError({
-				bolded: errorThrown,
-				message: 'Error loading notebooks (' + textStatus + ')'
-			}));
-			$('#modal-new-note').modal('hide');
-		});
-	});
-	$('#modal-new-note').on('shown.bs.modal', function (e) {
-		$('input', this).select();
-	});
-	$('#modal-new-note form').submit(function(ev) {
-		ev.preventDefault();
-		// TODO: FIXME: make sure the note doesn't already exist
-		
-		var tNote = $('#m-note-name').val();
-		var tNb = $('#m-note-selected-notebook').val();
-		if (!tNote) {
-			$('#m-note-fg-name').addClass('has-error');
-			$('#m-note-fg-name .help-block').text('You must name the note');
-		} else {
+	$('#dialogs').load('/static/dialogs.html', function() {
+		$('#modal-new-note').on('show.bs.modal', function (e) {
 			$('#m-note-fg-name').removeClass('has-error');
-			$('#m-note-fg-name .help-block').text('');
-		}
-		if (!tNb) {
-			$('#m-note-fg-nb').addClass('has-error');
-			$('#m-note-fg-nb .help-block').text('You must select a notebook');
-		} else {
 			$('#m-note-fg-nb').removeClass('has-error');
+			$('#m-note-fg-name .help-block').text('');
 			$('#m-note-fg-nb .help-block').text('');
-		}
-		if (!tNote || !tNb) {
-			return;
-		}
 
-		// TODO: check whether it already exists
-		// if it does, add an error message below the note name as above
-
-		// create an empty note
-		$.ajax('/api/note?notebook='+tNb+'&note='+tNote, {
-			method: 'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({
-				data: ''
-			})
-		}).done(function(data) {
-			navLoadNote(tNb, tNote);
-			$('#modal-new-note').modal('hide');
-			$('#m-note-name').val('');
-			// FIXME: make sure this is the proper way to reload the sidebar
-			navLoadNotebook(tNb, updateHistory=false);
-			tinymce.activeEditor.focus();
-		}).fail(function(xhr, textStatus, errorThrown) {
-			$('#content').prepend(hbAlertError({
-				bolded: errorThrown,
-				message: 'Error saving note "'+tNb+'/'+tNote+'" (' + textStatus + ')'
-			}));
+			//$('input', this).val('');
+			let selectElem = $('#m-note-selected-notebook');
+			$.ajax('/api/notebooks', {
+				method: 'GET',
+				dataType: 'json'
+			}).done(function(data) {
+				selectElem.empty();
+				for (let nb of data.notebooks) {
+					selectElem.append($('<option></option>').text(nb));
+				}
+				selectElem.selectpicker('refresh');
+				let nb = getNotebook();
+				if (nb) {
+					selectElem.selectpicker('val', nb);
+				}
+			}).fail(function(xhr, textStatus, errorThrown) {
+				$('#content').prepend(hbAlertError({
+					bolded: errorThrown,
+					message: 'Error loading notebooks (' + textStatus + ')'
+				}));
+				$('#modal-new-note').modal('hide');
+			});
 		});
-	});
-	$('#modal-new-notebook form').submit(function(ev) {
-		ev.preventDefault();
-		// TODO: list existing notebooks?
-		var tNb = $('#m-notebook-name').val();
-		if (!tNb) {
-			$('#m-notebook-fg-name').addClass('has-error');
-			$('#m-notebook-fg-name .help-block').text('You name the notebook');
-			return;
-		} else {
+		$('#modal-new-note').on('shown.bs.modal', function (e) {
+			$('input', this).select();
+		});
+		$('#modal-new-note form').submit(function(ev) {
+			ev.preventDefault();
+			// TODO: FIXME: make sure the note doesn't already exist
+			
+			var tNote = $('#m-note-name').val();
+			var tNb = $('#m-note-selected-notebook').val();
+			if (!tNote) {
+				$('#m-note-fg-name').addClass('has-error');
+				$('#m-note-fg-name .help-block').text('You must name the note');
+			} else {
+				$('#m-note-fg-name').removeClass('has-error');
+				$('#m-note-fg-name .help-block').text('');
+			}
+			if (!tNb) {
+				$('#m-note-fg-nb').addClass('has-error');
+				$('#m-note-fg-nb .help-block').text('You must select a notebook');
+			} else {
+				$('#m-note-fg-nb').removeClass('has-error');
+				$('#m-note-fg-nb .help-block').text('');
+			}
+			if (!tNote || !tNb) {
+				return;
+			}
+
+			// TODO: check whether it already exists
+			// if it does, add an error message below the note name as above
+
+			// create an empty note
+			$.ajax('/api/note?notebook='+tNb+'&note='+tNote, {
+				method: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					data: ''
+				})
+			}).done(function(data) {
+				navLoadNote(tNb, tNote);
+				$('#modal-new-note').modal('hide');
+				$('#m-note-name').val('');
+				// FIXME: make sure this is the proper way to reload the sidebar
+				navLoadNotebook(tNb, updateHistory=false);
+				tinymce.activeEditor.focus();
+			}).fail(function(xhr, textStatus, errorThrown) {
+				$('#content').prepend(hbAlertError({
+					bolded: errorThrown,
+					message: 'Error saving note "'+tNb+'/'+tNote+'" (' + textStatus + ')'
+				}));
+			});
+		});
+		$('#modal-new-notebook form').submit(function(ev) {
+			ev.preventDefault();
+			// TODO: list existing notebooks?
+			var tNb = $('#m-notebook-name').val();
+			if (!tNb) {
+				$('#m-notebook-fg-name').addClass('has-error');
+				$('#m-notebook-fg-name .help-block').text('You name the notebook');
+				return;
+			} else {
+				$('#m-notebook-fg-name').removeClass('has-error');
+				$('#m-notebook-fg-name .help-block').text('');
+			}
+			// create notebook
+			$.ajax('/api/notebook?notebook='+tNb, {
+				method: 'POST'
+			}).done(function(data) {
+				$('#modal-new-notebook').modal('hide');
+				$('#m-notebook-name').val('');
+				// FIXME: make sure this is the proper way to reload the sidebar
+				navLoadNotebook(tNb);
+			}).fail(function(xhr, textStatus, errorThrown) {
+				$('#content').prepend(hbAlertError({
+					bolded: errorThrown,
+					message: 'Error creating notebook "'+tNb+'" (' + textStatus + ')'
+				}));
+			});
+		});
+		$('#modal-new-notebook').on('show.bs.modal', function (e) {
 			$('#m-notebook-fg-name').removeClass('has-error');
 			$('#m-notebook-fg-name .help-block').text('');
-		}
-		// create notebook
-		$.ajax('/api/notebook?notebook='+tNb, {
-			method: 'POST'
-		}).done(function(data) {
-			$('#modal-new-notebook').modal('hide');
-			$('#m-notebook-name').val('');
-			// FIXME: make sure this is the proper way to reload the sidebar
-			navLoadNotebook(tNb);
-		}).fail(function(xhr, textStatus, errorThrown) {
-			$('#content').prepend(hbAlertError({
-				bolded: errorThrown,
-				message: 'Error creating notebook "'+tNb+'" (' + textStatus + ')'
-			}));
 		});
-	});
-	$('#modal-new-notebook').on('show.bs.modal', function (e) {
-		$('#m-notebook-fg-name').removeClass('has-error');
-		$('#m-notebook-fg-name .help-block').text('');
-	});
-	$('#modal-new-notebook').on('shown.bs.modal', function (e) {
-		$('input', this).select();
-	});
-	var delNotebook = null;
-	$('#modal-delete-notebook').on('show.bs.modal', function (e) {
-		var p = $(this).find('.modal-body p:first');
-		delNotebook = getNotebook();
-		p.text('Are you sure you wish to delete the notebook "'+delNotebook+'"?');
-	});
-	$('#modal-delete-notebook .btn-ok').click(function (e) {
-		if (!delNotebook) {
-			return;
-		}
-		// delete notebook
-		$.ajax('/api/notebook?notebook='+delNotebook, {
-			method: 'DELETE',
-			dataType: 'json'
-		}).done(function(data) {
-			$('#modal-delete-notebook').modal('hide');
-			navLoadHome();
-		}).fail(function(xhr, textStatus, errorThrown) {
-			$('#content').prepend(hbAlertError({
-				bolded: errorThrown,
-				message: 'Error deleting notebook "'+delNotebook+'" (' + textStatus + ')'
-			}));
+		$('#modal-new-notebook').on('shown.bs.modal', function (e) {
+			$('input', this).select();
 		});
-	});
-	$('#modal-confirm-delete .btn-ok').click(function(ev) {
-		// FIXME: make sure we have a note open
-		// delete note
-		$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
-			method: 'DELETE',
-			dataType: 'json'
-		}).done(function(data) {
-			$('#modal-confirm-delete').modal('hide');
-			navLoadNotebook(getNotebook());
-			// TODO: unload the current note
-		}).fail(function(xhr, textStatus, errorThrown) {
-			$('#content').prepend(hbAlertError({
-				bolded: errorThrown,
-				message: 'Error deleting note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
-			}));
+		var delNotebook = null;
+		$('#modal-delete-notebook').on('show.bs.modal', function (e) {
+			var p = $(this).find('.modal-body p:first');
+			delNotebook = getNotebook();
+			p.text('Are you sure you wish to delete the notebook "'+delNotebook+'"?');
+		});
+		$('#modal-delete-notebook .btn-ok').click(function (e) {
+			if (!delNotebook) {
+				return;
+			}
+			// delete notebook
+			$.ajax('/api/notebook?notebook='+delNotebook, {
+				method: 'DELETE',
+				dataType: 'json'
+			}).done(function(data) {
+				$('#modal-delete-notebook').modal('hide');
+				navLoadHome();
+			}).fail(function(xhr, textStatus, errorThrown) {
+				$('#content').prepend(hbAlertError({
+					bolded: errorThrown,
+					message: 'Error deleting notebook "'+delNotebook+'" (' + textStatus + ')'
+				}));
+			});
+		});
+		$('#modal-confirm-delete .btn-ok').click(function(ev) {
+			// FIXME: make sure we have a note open
+			// delete note
+			$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
+				method: 'DELETE',
+				dataType: 'json'
+			}).done(function(data) {
+				$('#modal-confirm-delete').modal('hide');
+				navLoadNotebook(getNotebook());
+				// TODO: unload the current note
+			}).fail(function(xhr, textStatus, errorThrown) {
+				$('#content').prepend(hbAlertError({
+					bolded: errorThrown,
+					message: 'Error deleting note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
+				}));
+			});
 		});
 	});
 	
