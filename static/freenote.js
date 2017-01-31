@@ -196,6 +196,13 @@ $(document).ready(function() {
 			}).fail(function(xhr, textStatus, errorThrown) {
 				isSaving = false;
 				var elm = $('#document-status').html('<span id="save-icon-failed" class="fa fa-times-circle fa-fw"></span>');
+				if (xhr.status==403) {
+					let responseJson = JSON.parse(xhr.responseText);
+					if (responseJson.reason === 'old_mtime') {
+						$('#modal-confirm-overwrite').modal();
+						return;
+					}
+				}
 				$('#content').prepend(hbAlertError({
 					bolded: errorThrown,
 					message: 'Error saving note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
@@ -669,6 +676,9 @@ $(document).ready(function() {
 					message: 'Error deleting note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
 				}));
 			});
+		});
+		$('#modal-confirm-overwrite .btn-ok').click(function(ev) {
+			// TODO: save with override
 		});
 	});
 	

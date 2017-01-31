@@ -78,6 +78,19 @@ def noteRequest(notebook, note):
 
 ''' API '''
 
+class OverrideWarning(Exception):
+	status_code = 403
+	def __init__(self, reason):
+		self.reason = reason
+
+@app.errorhandler(OverrideWarning)
+def handleOverrideWarning(error):
+	response = flask.jsonify({
+		'reason': error.reason,
+	})
+	response.status_code = error.status_code
+	return response
+
 def indexIgnore(s, sub, ignoreChars):
 	'''find substring sub in string s. ignore chars in ignoreChars array.
 	returns index in s of first incidence of sub (-1 if no match)'''
@@ -206,7 +219,7 @@ def apiPutNote():
 		flask.request.args['note'])
 	if os.path.isfile(path):
 		if round(float(flask.request.args['mtime']), 2) < round(os.path.getmtime(path), 2):
-			flask.abort(403)
+			raise OverrideWarning(reason='old_mtime')
 	data = flask.request.get_json()['data']
 	data = html2markdown.convert(data).encode('utf8')
 	with open(path, "w") as f:
