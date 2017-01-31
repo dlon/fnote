@@ -194,11 +194,12 @@ $(document).ready(function() {
 				}
 				isSaving = false;
 			}).fail(function(xhr, textStatus, errorThrown) {
+				isSaving = false;
+				var elm = $('#document-status').html('<span id="save-icon-failed" class="fa fa-times-circle fa-fw"></span>');
 				$('#content').prepend(hbAlertError({
 					bolded: errorThrown,
 					message: 'Error saving note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
 				}));
-				isSaving = false;
 			});
 		}, 400);
 	}

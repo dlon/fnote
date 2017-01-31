@@ -141,3 +141,6 @@ html, body {
 #save-icon-done {
 	color:#0c0;
 }
+#save-icon-failed {
+	color:#c00;
+}
