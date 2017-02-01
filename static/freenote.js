@@ -395,17 +395,17 @@ $(document).ready(function() {
 			ev.preventDefault();
 			navLoadNotebook($(this).attr('href').split('/')[2]);
 		});
-		let nb = getNotebook();
 		if (reloadNotelinks) {
 			$('.notebooks-list a').click(function(ev) {
 				if (ev.ctrlKey) {
 					return true;
 				}
 				ev.preventDefault();
-				if (!nb) {
-					navLoadNotebook($(ev.target).text());
-				} else {
-					navLoadNote(nb, $(ev.target).text());
+				let href = $(this).attr('href').split('/');
+				if (href[1] === 'notebook') {
+					navLoadNotebook(href[2]);
+				} else if (href[1] === 'edit') {
+					navLoadNote(href[2], href[3]);
 				}
 			});
 		}
