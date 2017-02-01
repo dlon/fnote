@@ -681,7 +681,14 @@ $(document).ready(function() {
 			}).done(function(data) {
 				$('#modal-confirm-delete').modal('hide');
 				navLoadNotebook(getNotebook());
-				// TODO: unload the current note
+				// unload the current note
+				editNotebook = null;
+				editNote = null;
+				lastSaveState = null;
+				document.title = 'Freenote';
+				$('#document-title').val('');
+				reloadNotebooksSelect();
+				tinymce.activeEditor.setContent('');
 			}).fail(function(xhr, textStatus, errorThrown) {
 				$('#content').prepend(hbAlertError({
 					bolded: errorThrown,
