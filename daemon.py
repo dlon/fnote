@@ -163,9 +163,14 @@ def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 @app.route('/api/notebooks', methods=['GET'])
 @checkAuthIfSet
 def apiGetNotebooks():
+	recentNotes = glob.glob('notes/*/*')
+	recentNotes.sort(key=lambda x: os.stat(x).st_mtime, reverse=True)
+	recentNotes = [[x.decode('latin1') for x in path.replace('\\','/').split('/')[1:]]
+		for path in recentNotes[:numberOfRecentNotes]]
 	return flask.json.dumps({
-		'notebooks': [item.decode('latin1') for item in os.listdir('notes/') if os.path.isdir('notes/%s' % item)]
-		})
+		'notebooks': [item.decode('latin1') for item in os.listdir('notes/') if os.path.isdir('notes/%s' % item)],
+		'recentNotes': recentNotes,
+	})
 
 @app.route('/api/notes', methods=['GET'])
 @checkAuthIfSet

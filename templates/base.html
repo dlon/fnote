@@ -38,7 +38,15 @@
 	<script id="notebooks-template" type="text/x-handlebars-template">
 		<div class="panel panel-primary">
 			<div class="panel-heading"><h1 class="panel-title">Recent</h1></div>
-			<div class="panel-body"></div>
+			<div class="panel-body">
+			<ul class="nav nav-pills nav-stacked">
+				{{#each recentNotes}}
+				<li role="presentation">
+					<a href="/edit/{{this.[0]}}/{{this.[1]}}">{{this.[1]}}</a>
+				</li>
+				{{/each}}
+			</ul>
+			</div>
 		</div>
 		<div class="panel panel-primary">
 			<div class="panel-heading"><h1 class="panel-title">Notebooks</h1></div>

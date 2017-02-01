@@ -282,7 +282,8 @@ $(document).ready(function() {
 			$('#sidebar .breadcrumb').html('<li>Home</li>');
 			$('.notebooks-list').empty();
 			$('.notebooks-list').append(hbNotebooksTemplate({
-				notebooks:data.notebooks
+				notebooks:data.notebooks,
+				recentNotes:data.recentNotes,
 			}));
 
 			if (updateHistory) {
