@@ -9,7 +9,8 @@
 	<div class="panel-heading"><h1 class="panel-title">Recent notes</h1></div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
-			<li role="presentation"><a href="/">qwe</a></li>
+			{% for note in recentNotes %}<li role="presentation"><a href="/edit/{{ note[0] }}/{{ note[1] }}">{{ note[1] }}</a></li>
+			{% endfor %}
 		</ul>
 	</div>
 </div>
@@ -17,8 +18,7 @@
 	<div class="panel-heading"><h1 class="panel-title">Notebooks</h1></div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
-			{% for notebook in notebooks %}
-			<li role="presentation"><a href="/notebook/{{ notebook }}">{{ notebook }}</a></li>
+			{% for notebook in notebooks %}<li role="presentation"><a href="/notebook/{{ notebook }}">{{ notebook }}</a></li>
 			{% endfor %}
 		</ul>
 	</div>

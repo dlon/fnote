@@ -6,6 +6,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # FIXME: remove. for instantaneous u
 
 import os
 import re
+import glob
 import markdown
 import html2markdown
 
@@ -13,6 +14,8 @@ import html2markdown
 from functools import wraps
 username = 'admin'
 password = 'pass'
+
+numberOfRecentNotes = 7
 
 def check_auth(user, pass_):
 	"""This function is called to check if a username /
@@ -49,7 +52,13 @@ mdExtensions = [
 @app.route('/')
 @checkAuthIfSet
 def index():
-	return flask.render_template('index.html', notebooks=[dir.decode('latin1') for dir in os.listdir('notes/')])
+	recentNotes = glob.glob('notes/*/*')
+	recentNotes.sort(key=lambda x: os.stat(x).st_mtime, reverse=True)
+	recentNotes = [[x.decode('latin1') for x in path.replace('\\','/').split('/')[1:]]
+		for path in recentNotes[:numberOfRecentNotes]]
+	return flask.render_template('index.html',
+		notebooks=[dir.decode('latin1') for dir in os.listdir('notes/')],
+		recentNotes=recentNotes)
 
 @app.route('/notebook/<notebook>')
 @checkAuthIfSet
@@ -67,7 +76,6 @@ def noteRequest(notebook, note):
 	notes.sort(key=lambda x: os.stat(os.path.join(nbDir, x)).st_mtime, reverse=True) # sort by mod date
 	path = 'notes/%s/%s' % (notebook, note)
 	with open(path) as f:
-		# TODO: process the data in some way
 		return flask.render_template('note.html',
 			notebook=notebook, note=note,
 			noteData=markdown.markdown(f.read().decode('utf8'),
