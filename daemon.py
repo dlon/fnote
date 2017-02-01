@@ -116,8 +116,7 @@ def indexIgnore(s, sub, ignoreChars):
 def jsonSearch(query, maxNumResults, responseRadius, notebook='', note=''):
 	# TODO: implement note filter (last two parameters)
 	if not notebook and note:
-		#flask.abort(200) # FIXME: what error code is appropriate here? 404, 200, or neither?
-		raise Exception('notebook must be defined if note is') # FIXME: how do I deal with this?
+		flask.abort(404)
 	if not query:
 		return '[]'
 	matches = []
