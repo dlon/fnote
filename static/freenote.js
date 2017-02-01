@@ -447,6 +447,9 @@ $(document).ready(function() {
 		});
 	}
 	$('#document-notebook').change(function() {
+		if (!editNote || !editNotebook) {
+			return;
+		}
 		var newNotebook = $('#document-notebook option:selected').text();
 		$.ajax('/api/rename', {
 			method: 'POST',
@@ -659,6 +662,7 @@ $(document).ready(function() {
 			}).done(function(data) {
 				$('#modal-delete-notebook').modal('hide');
 				navLoadHome();
+				// TODO: clear everything
 			}).fail(function(xhr, textStatus, errorThrown) {
 				$('#content').prepend(hbAlertError({
 					bolded: errorThrown,
@@ -667,7 +671,9 @@ $(document).ready(function() {
 			});
 		});
 		$('#modal-confirm-delete .btn-ok').click(function(ev) {
-			// FIXME: make sure we have a note open
+			if (!editNote || !editNotebook) {
+				return;
+			}
 			// delete note
 			$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote, {
 				method: 'DELETE',
