@@ -371,6 +371,7 @@ $(document).ready(function() {
 			}
 			setSidebarEvents(reloadNotelinks=false);
 			restyleSidebarNotes();
+			lastSaveState = tinymce.activeEditor.getContent();
 			// reload sidebar notebook (TODO: handle this differently? breadcrumb looks weird when in different notebook)
 			if (notebook !== oldNotebook) {
 				navLoadNotebook(notebook, updateHistory = false, loadBreadcrumb = false);
