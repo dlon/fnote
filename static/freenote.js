@@ -590,7 +590,8 @@ $(document).ready(function() {
 				method: 'POST',
 				contentType: 'application/json',
 				data: JSON.stringify({
-					data: ''
+					data: '',
+					override: false,
 				})
 			}).done(function(data) {
 				navLoadNote(tNb, tNote);
