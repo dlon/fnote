@@ -446,7 +446,7 @@ $(document).ready(function() {
 							dataType: 'json'
 						}).done(function(data) {
 							$('#tb-modal-delete-note').modal('hide');
-							navLoadNotebook(noteToolbarNotebook);
+							navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
 							// TODO: deal with current note being deleted
 							/*
 							if (editNote === noteToolbarNote && editNotebook === noteToolbarNotebook) {
@@ -505,7 +505,7 @@ $(document).ready(function() {
 								targetNote:notenameElem.val(),
 							})
 						}).done(function(data) {
-							navLoadNotebook(noteToolbarNotebook);
+							navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
 							// TODO: deal with current note being renamed
 							renameDlg.modal('hide');
 						}).fail(function(xhr, textStatus, errorThrown) {
