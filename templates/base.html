@@ -65,10 +65,15 @@
 		<div class="panel panel-primary">
 			<div class="panel-heading"><h1 class="panel-title">{{notebook}}</h1></div>
 			<div class="panel-body">
-			<ul class="nav nav-pills nav-stacked">
+			<ul class="list-group">
 				{{#each notes}}
-				<li role="presentation">
+				<li class="list-group-item">
 					<a href="/edit/{{../notebook}}/{{this}}">{{this}}</a>
+					<div class="btn-group pull-right">
+						<button type="button" class="btn btn-default btn-xs" title="Delete note"><span class="fa fa-times"></span></button>
+						<button type="button" class="btn btn-default btn-xs" title="Rename note"><span class="fa fa-pencil"></span></button>
+						<button type="button" class="btn btn-default btn-xs" title="Duplicate note"><span class="fa fa-clone"></span></button>
+					</div>
 				</li>
 				{{/each}}
 			</ul>

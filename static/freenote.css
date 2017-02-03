@@ -131,6 +131,21 @@ html, body {
 	left:0;
 	width:100%;
 }
+.notebooks-list li .btn-group {
+	display:none;
+}
+.notebooks-list li:hover {
+	background:#eee;
+}
+.notebooks-list li:hover .btn-group, .notebooks-list li.active .btn-group {
+	display:block;
+}
+.notebooks-list li a {
+	text-decoration:none;
+}
+.notebooks-list li.active a {
+	color:#fff;
+}
 #notebooks-wrapper {
 	position:relative;
 }

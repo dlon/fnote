@@ -417,7 +417,7 @@ $(document).ready(function() {
 			return;
 		}
 		$('.notebooks-list li').each(function(i,e) {
-			if (editNote === $(this).children().text()) {
+			if (editNote === $(this).find('a').text()) {
 				$(this).addClass('active');
 			} else {
 				$(this).removeClass('active');
