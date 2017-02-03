@@ -511,7 +511,7 @@ $(document).ready(function() {
 						}).fail(function(xhr, textStatus, errorThrown) {
 							$('#content').prepend(hbAlertError({
 								bolded: errorThrown,
-								message: 'Error moving/renaming note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
+								message: 'Error moving/renaming note "'+noteToolbarNotebook+'/'+noteToolbarNote+'" (' + textStatus + ')'
 							}));
 						});
 					});
