@@ -437,42 +437,42 @@ $(document).ready(function() {
 		if (noteToolbarDlgs === null) {
 			$.get('/static/noteToolbar.html', function(data) {
 				noteToolbarDlgs = $('body').append(data);
-				$('#tb-modal-delete-note').on('show.bs.modal', function(e) {
+				let deleteDlg = $('#tb-modal-delete-note');
+				let renameDlg = $('#tb-modal-rename-note');
+				deleteDlg.on('show.bs.modal', function(e) {
 					$(this).find('.modal-body').text("Are you sure you wish to delete '"+noteToolbarNote+"'?");
-					$(this).find(':submit').click(function(e) {
-						e.preventDefault();
-						$.ajax('/api/note?notebook='+noteToolbarNotebook+'&note='+noteToolbarNote, {
-							method: 'DELETE',
-							dataType: 'json'
-						}).done(function(data) {
-							$('#tb-modal-delete-note').modal('hide');
-							navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
-							// TODO: deal with current note being deleted
-							/*
-							if (editNote === noteToolbarNote && editNotebook === noteToolbarNotebook) {
-								// unload the current note
-								editNotebook = null;
-								editNote = null;
-								lastSaveState = null;
-								document.title = 'Freenote';
-								$('#document-title').val('');
-								reloadNotebooksSelect();
-								tinymce.activeEditor.setContent('');
-							}
-							*/
-						}).fail(function(xhr, textStatus, errorThrown) {
-							$('#content').prepend(hbAlertError({
-								bolded: errorThrown,
-								message: 'Error deleting note "'+noteToolbarNotebook+'/'+noteToolbarNote+'" (' + textStatus + ')'
-							}));
-						});
+				});
+				deleteDlg.find(':submit').click(function(e) {
+					e.preventDefault();
+					$.ajax('/api/note?notebook='+noteToolbarNotebook+'&note='+noteToolbarNote, {
+						method: 'DELETE',
+						dataType: 'json'
+					}).done(function(data) {
+						deleteDlg.modal('hide');
+						navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
+						// TODO: deal with current note being deleted
+						/*
+						if (editNote === noteToolbarNote && editNotebook === noteToolbarNotebook) {
+							// unload the current note
+							editNotebook = null;
+							editNote = null;
+							lastSaveState = null;
+							document.title = 'Freenote';
+							$('#document-title').val('');
+							reloadNotebooksSelect();
+							tinymce.activeEditor.setContent('');
+						}
+						*/
+					}).fail(function(xhr, textStatus, errorThrown) {
+						$('#content').prepend(hbAlertError({
+							bolded: errorThrown,
+							message: 'Error deleting note "'+noteToolbarNotebook+'/'+noteToolbarNote+'" (' + textStatus + ')'
+						}));
 					});
 				});
-				let renameDlg = $('#tb-modal-rename-note');
 				renameDlg.on('show.bs.modal', function(e) {
 					$(this).find('.help-block').text('');
-					var notenameElem = $(this).find('input');
-					notenameElem.val(noteToolbarNote);
+					$(this).find('input').val(noteToolbarNote);
 					let selectElem = $(this).find('select');
 					$.ajax('/api/notebooks', {
 						method: 'GET',
@@ -491,33 +491,32 @@ $(document).ready(function() {
 						}));
 						renameDlg.modal('hide');
 					});
-
-					$(this).find(':submit').click(function(e) {
-						e.preventDefault();
-						renameDlg.modal('hide');
-						$.ajax('/api/rename', {
-							method: 'POST',
-							contentType: 'application/json',
-							data: JSON.stringify({
-								sourceNotebook:noteToolbarNotebook,
-								sourceNote:noteToolbarNote,
-								targetNotebook:selectElem.val(),
-								targetNote:notenameElem.val(),
-							})
-						}).done(function(data) {
-							navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
-							// TODO: deal with current note being renamed
-							renameDlg.modal('hide');
-						}).fail(function(xhr, textStatus, errorThrown) {
-							$('#content').prepend(hbAlertError({
-								bolded: errorThrown,
-								message: 'Error moving/renaming note "'+noteToolbarNotebook+'/'+noteToolbarNote+'" (' + textStatus + ')'
-							}));
-						});
-					});
 				});
 				renameDlg.on('shown.bs.modal', function(e) {
 					$('input', this).select();
+				});
+				renameDlg.find(':submit').click(function(e) {
+					e.preventDefault();
+					renameDlg.modal('hide');
+					$.ajax('/api/rename', {
+						method: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify({
+							sourceNotebook:noteToolbarNotebook,
+							sourceNote:noteToolbarNote,
+							targetNotebook:renameDlg.find('select').val(),
+							targetNote:renameDlg.find('input').val(),
+						})
+					}).done(function(data) {
+						navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
+						// TODO: deal with current note being renamed
+						renameDlg.modal('hide');
+					}).fail(function(xhr, textStatus, errorThrown) {
+						$('#content').prepend(hbAlertError({
+							bolded: errorThrown,
+							message: 'Error moving/renaming note "'+noteToolbarNotebook+'/'+noteToolbarNote+'" (' + textStatus + ')'
+						}));
+					});
 				});
 
 				sidebarSetNoteToolbarEvents();
