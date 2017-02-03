@@ -1,0 +1,45 @@
+<div class="modal fade" id="tb-modal-delete-note" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Delete note</h4>
+            </div>
+            <div class="modal-body">
+                Placeholder: Are you sure you wish to delete the note?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger btn-ok">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="tb-modal-rename-note" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+		<h4 class="modal-title">Rename note</h4>
+	  </div>
+	  <form>
+	  <div class="modal-body">
+		<div id="tb-modal-rename-note-note" class="form-group">
+			<label class="control-label" for="ttb-modal-rename-note-selectednote">Name:</label>
+			<input id="tb-modal-rename-note-selectednote" placeholder="Enter a note name" class="form-control">
+			<span class="help-block"></span>
+		</div>
+		<div id="tb-modal-rename-note-notebook" class="form-group">
+			<label class="control-label" for="tb-modal-rename-note-selectednotebook">Notebook:</label>
+			<select id="tb-modal-rename-note-selectednotebook" class="selectpicker form-control" data-live-search="true" title="Select a notebook"></select>
+			<span class="help-block"></span>
+		</div>
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		<button type="submit" class="btn btn-primary btn-ok">Rename</button>
+	  </div>
+	  </form>
+	</div>
+	</div>
+</div>

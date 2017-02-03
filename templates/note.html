@@ -21,9 +21,9 @@
 			<li class="list-group-item{% if note == note_ %} active{% endif %}">
 			<a href="/edit/{{ notebook }}/{{ note_ }}">{{ note_ }}</a>
 			<div class="btn-group pull-right">
-				<button type="button" class="btn btn-default btn-xs" title="Delete note"><span class="fa fa-times"></span></button>
-				<button type="button" class="btn btn-default btn-xs" title="Rename note"><span class="fa fa-pencil"></span></button>
-				<button type="button" class="btn btn-default btn-xs" title="Duplicate note"><span class="fa fa-clone"></span></button>
+				<button type="button" class="tb-delete-note btn btn-default btn-xs" title="Delete note"><span class="fa fa-times"></span></button>
+				<button type="button" class="tb-rename-note btn btn-default btn-xs" title="Rename note"><span class="fa fa-pencil"></span></button>
+				<button type="button" class="tb-duplicate-note btn btn-default btn-xs" title="Duplicate note"><span class="fa fa-clone"></span></button>
 			</div>
 			</li>
 			{% endfor %}

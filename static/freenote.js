@@ -409,6 +409,9 @@ $(document).ready(function() {
 					navLoadNote(href[2], href[3]);
 				}
 			});
+			if (getNotebook()) {
+				sidebarSetNoteToolbarEvents();
+			}
 		}
 	}
 	function restyleSidebarNotes() {
@@ -424,8 +427,124 @@ $(document).ready(function() {
 			}
 		});
 	}
+
+	// sidebar note toolbar buttons
+	var noteToolbarDlgs = null,
+		noteToolbarNote = null,
+		noteToolbarNotebook = null;
+	function sidebarSetNoteToolbarEvents() {
+		// NOTE: called by setSidebarEvents()
+		if (noteToolbarDlgs === null) {
+			$.get('/static/noteToolbar.html', function(data) {
+				noteToolbarDlgs = $('body').append(data);
+				$('#tb-modal-delete-note').on('show.bs.modal', function(e) {
+					$(this).find('.modal-body').text("Are you sure you wish to delete '"+noteToolbarNote+"'?");
+					$(this).find(':submit').click(function(e) {
+						e.preventDefault();
+						$.ajax('/api/note?notebook='+noteToolbarNotebook+'&note='+noteToolbarNote, {
+							method: 'DELETE',
+							dataType: 'json'
+						}).done(function(data) {
+							$('#tb-modal-delete-note').modal('hide');
+							navLoadNotebook(noteToolbarNotebook);
+							// TODO: deal with current note being deleted
+							/*
+							if (editNote === noteToolbarNote && editNotebook === noteToolbarNotebook) {
+								// unload the current note
+								editNotebook = null;
+								editNote = null;
+								lastSaveState = null;
+								document.title = 'Freenote';
+								$('#document-title').val('');
+								reloadNotebooksSelect();
+								tinymce.activeEditor.setContent('');
+							}
+							*/
+						}).fail(function(xhr, textStatus, errorThrown) {
+							$('#content').prepend(hbAlertError({
+								bolded: errorThrown,
+								message: 'Error deleting note "'+noteToolbarNotebook+'/'+noteToolbarNote+'" (' + textStatus + ')'
+							}));
+						});
+					});
+				});
+				let renameDlg = $('#tb-modal-rename-note');
+				renameDlg.on('show.bs.modal', function(e) {
+					$(this).find('.help-block').text('');
+					var notenameElem = $(this).find('input');
+					notenameElem.val(noteToolbarNote);
+					let selectElem = $(this).find('select');
+					$.ajax('/api/notebooks', {
+						method: 'GET',
+						dataType: 'json'
+					}).done(function(data) {
+						selectElem.empty();
+						for (let nb of data.notebooks) {
+							selectElem.append($('<option></option>').text(nb));
+						}
+						selectElem.selectpicker('refresh');
+						selectElem.selectpicker('val', noteToolbarNotebook);
+					}).fail(function(xhr, textStatus, errorThrown) {
+						$('#content').prepend(hbAlertError({
+							bolded: errorThrown,
+							message: 'Error loading notebooks (' + textStatus + ')'
+						}));
+						renameDlg.modal('hide');
+					});
+
+					$(this).find(':submit').click(function(e) {
+						e.preventDefault();
+						renameDlg.modal('hide');
+						$.ajax('/api/rename', {
+							method: 'POST',
+							contentType: 'application/json',
+							data: JSON.stringify({
+								sourceNotebook:noteToolbarNotebook,
+								sourceNote:noteToolbarNote,
+								targetNotebook:selectElem.val(),
+								targetNote:notenameElem.val(),
+							})
+						}).done(function(data) {
+							navLoadNotebook(noteToolbarNotebook);
+							// TODO: deal with current note being renamed
+							renameDlg.modal('hide');
+						}).fail(function(xhr, textStatus, errorThrown) {
+							$('#content').prepend(hbAlertError({
+								bolded: errorThrown,
+								message: 'Error moving/renaming note "'+editNotebook+'/'+editNote+'" (' + textStatus + ')'
+							}));
+						});
+					});
+				});
+				renameDlg.on('shown.bs.modal', function(e) {
+					$('input', this).select();
+				});
+
+				sidebarSetNoteToolbarEvents();
+			});
+			return;
+		}
+		function setTbVars(noteLi) {
+			let noteLink = noteLi.find('a').attr('href').split('/');
+			noteToolbarNotebook = noteLink[2];
+			noteToolbarNote = noteLink[3];
+		}
+		$('.tb-delete-note').click(function (e) {
+			setTbVars($(this).closest('li'));
+			$('#tb-modal-delete-note').modal();
+		});
+		$('.tb-rename-note').click(function (e) {
+			setTbVars($(this).closest('li'));
+			$('#tb-modal-rename-note').modal();
+		});
+		$('.tb-duplicate-note').click(function (e) {
+			setTbVars($(this).closest('li'));
+			// TODO
+		});
+	}
+
 	setSidebarEvents();
-	
+
 	// dropdown notebook setting
 	function reloadNotebooksSelect(activeNotebook = '') {
 		$.ajax('/api/notebooks', {
@@ -529,7 +648,7 @@ $(document).ready(function() {
 		}, 200);
 	});
 
-	// modal dialogs
+	// modal dialogs (except sidebar note toolbar)
 	$('#dialogs').load('/static/dialogs.html', function() {
 		$('#modal-new-note').on('show.bs.modal', function (e) {
 			$('#m-note-fg-name').removeClass('has-error');
