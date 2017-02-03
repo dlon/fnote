@@ -5,6 +5,7 @@ app = Flask('freenote')
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # FIXME: remove. for instantaneous updates
 
 import os
+import shutil
 import re
 import glob
 import markdown
@@ -267,6 +268,15 @@ def apiRenameNote():
 	jsData = flask.request.get_json()
 	# TODO: check whether the file/note already exists
 	os.rename('notes/%s/%s' % (jsData['sourceNotebook'], jsData['sourceNote']),
+		'notes/%s/%s' % (jsData['targetNotebook'], jsData['targetNote']))
+	return flask.json.dumps({'success':True})
+
+@app.route('/api/copy', methods=['PUT', 'POST'])
+@checkAuthIfSet
+def apiCopyNote():
+	jsData = flask.request.get_json()
+	# TODO: check whether the file/note already exists
+	shutil.copyfile('notes/%s/%s' % (jsData['sourceNotebook'], jsData['sourceNote']),
 		'notes/%s/%s' % (jsData['targetNotebook'], jsData['targetNote']))
 	return flask.json.dumps({'success':True})
 

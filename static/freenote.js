@@ -538,7 +538,23 @@ $(document).ready(function() {
 		});
 		$('.tb-duplicate-note').click(function (e) {
 			setTbVars($(this).closest('li'));
-			// TODO
+			$.ajax('/api/copy', {
+				method: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					sourceNotebook:noteToolbarNotebook,
+					sourceNote:noteToolbarNote,
+					targetNotebook:noteToolbarNotebook,
+					targetNote:noteToolbarNote + " - duplicate",
+				})
+			}).done(function(data) {
+				navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
+			}).fail(function(xhr, textStatus, errorThrown) {
+				$('#content').prepend(hbAlertError({
+					bolded: errorThrown,
+					message: 'Error duplicating note "'+noteToolbarNotebook+'/'+noteToolbarNote+'" (' + textStatus + ')'
+				}));
+			});
 		});
 	}
 
