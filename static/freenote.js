@@ -161,7 +161,10 @@ $(document).ready(function() {
 			}
 			saveTimer = 0;
 			if (!editNotebook || !editNote) {
-				return; // TODO: add error msg
+				$('#document-status').html('<span id="save-icon-warning" class="fa fa-times-circle fa-fw"></span>')
+					.show()
+					.children().attr('title', 'No note is open. Text will not be saved.');
+				return;
 			}
 			var newSaveState = editor.getContent();
 			if (lastSaveState === newSaveState) {
@@ -349,6 +352,7 @@ $(document).ready(function() {
 				note: note
 			}
 		}).done(function(data) {
+			$('#document-status').hide();
 			if (stateHasChanged(tinymce.activeEditor)) {
 				if (!window.confirm('You have unsaved changes. Are you sure?')) {
 					return;
