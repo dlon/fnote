@@ -61,7 +61,7 @@ def index():
 		notebooks=[dir.decode('latin1') for dir in os.listdir('notes/')],
 		recentNotes=recentNotes)
 
-@app.route('/notebook/<notebook>')
+@app.route('/edit/<notebook>')
 @checkAuthIfSet
 def notebook(notebook):
 	nbDir = 'notes/%s/' % notebook

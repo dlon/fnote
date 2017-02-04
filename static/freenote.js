@@ -1,6 +1,6 @@
 function makeNoteUrl(newNotebook = '', newNote = '') {
 	locArray = window.location.pathname.split('/');
-	if (locArray[1].toLowerCase() !== 'edit') {
+	if (!locArray[3]) {
 		return window.location.pathname;
 	}
 	if (newNotebook) {
@@ -13,13 +13,13 @@ function makeNoteUrl(newNotebook = '', newNote = '') {
 }
 function getNotebook() {
 	locArray = window.location.pathname.split('/');
-	if (locArray[1].toLowerCase() == 'edit' || locArray[1].toLowerCase() == 'notebook') {
+	if (locArray[1].toLowerCase() == 'edit') {
 		return decodeURIComponent(locArray[2]);
 	}
 }
 function getNote() {
 	locArray = window.location.pathname.split('/');
-	if (locArray[1].toLowerCase() == 'edit') {
+	if (locArray[1].toLowerCase() == 'edit' && locArray[3]) {
 		return decodeURIComponent(locArray[3]);
 	}
 }
@@ -323,7 +323,7 @@ $(document).ready(function() {
 			}));
 
 			if (updateHistory) {
-				window.history.pushState({navLevel: 2, navNb:notebook}, 'nbnav', '/notebook/'+notebook);
+				window.history.pushState({navLevel: 2, navNb:notebook}, 'nbnav', '/edit/'+notebook);
 			}
 
 			setSidebarEvents();
@@ -356,7 +356,7 @@ $(document).ready(function() {
 			}
 			// breadcrumb
 			$('#sidebar .breadcrumb').html('<li><a href="/">Home</a></li>')
-				.append('<li><a href="/notebook/'+notebook+'">'+notebook+'</a></li>')
+				.append('<li><a href="/edit/'+notebook+'">'+notebook+'</a></li>')
 				.append('<li>'+note+'</li>');
 			let oldNotebook = editNotebook;
 			// notes
@@ -389,7 +389,7 @@ $(document).ready(function() {
 			ev.preventDefault();
 			navLoadHome();
 		});
-		$('#sidebar .breadcrumb a[href^="/notebook/"]').click(function(ev) {
+		$('#sidebar .breadcrumb a[href^="/edit/"]').click(function(ev) {
 			if (ev.ctrlKey) {
 				return true;
 			}
@@ -403,10 +403,12 @@ $(document).ready(function() {
 				}
 				ev.preventDefault();
 				let href = $(this).attr('href').split('/');
-				if (href[1] === 'notebook') {
-					navLoadNotebook(href[2]);
-				} else if (href[1] === 'edit') {
-					navLoadNote(href[2], href[3]);
+				if (href[1] === 'edit') {
+					if (!href[3]) {
+						navLoadNotebook(href[2]);
+					} else {
+						navLoadNote(href[2], href[3]);
+					}
 				}
 			});
 			if (getNotebook()) {
@@ -441,6 +443,9 @@ $(document).ready(function() {
 				let renameDlg = $('#tb-modal-rename-note');
 				deleteDlg.on('show.bs.modal', function(e) {
 					$(this).find('.modal-body').text("Are you sure you wish to delete '"+noteToolbarNote+"'?");
+				});
+				deleteDlg.on('shown.bs.modal', function(e) {
+					$(this).find(':submit').focus();
 				});
 				deleteDlg.find(':submit').click(function(e) {
 					e.preventDefault();
