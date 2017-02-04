@@ -161,7 +161,7 @@ $(document).ready(function() {
 			}
 			saveTimer = 0;
 			if (!editNotebook || !editNote) {
-				$('#document-status').html('<span id="save-icon-warning" class="fa fa-times-circle fa-fw"></span>')
+				$('.document-status').html('<span id="save-icon-warning" class="fa fa-times-circle fa-fw"></span>')
 					.show()
 					.children().attr('title', 'No note is open. Text will not be saved.');
 				return;
@@ -175,7 +175,7 @@ $(document).ready(function() {
 				clearTimeout(saveFadeOutTimer);
 				saveFadeOutTimer = 0;
 			}
-			$('#document-status').html('<span id="save-icon-spinner" class="fa fa-spinner fa-spin fa-fw"></span>').show();
+			$('.document-status').html('<span id="save-icon-spinner" class="fa fa-spinner fa-spin fa-fw"></span>').show();
 			$.ajax('/api/note?notebook='+editNotebook+'&note='+editNote+'&mtime='+editMtime, {
 				method: 'POST',
 				contentType: 'application/json',
@@ -187,7 +187,7 @@ $(document).ready(function() {
 			}).done(function(data) {
 				editMtime = data.mtime;
 				lastSaveState = newSaveState;
-				var elm = $('#document-status').html('<span id="save-icon-done" class="fa fa-check-circle fa-fw"></span>');
+				var elm = $('.document-status').html('<span id="save-icon-done" class="fa fa-check-circle fa-fw"></span>');
 				saveFadeOutTimer = setTimeout(function(){elm.fadeOut();}, 1000);
 				let activeLi = $('.notebooks-list li.active');
 				if (!activeLi.is('.notebooks-list li:first')) {
@@ -199,7 +199,7 @@ $(document).ready(function() {
 				isSaving = false;
 			}).fail(function(xhr, textStatus, errorThrown) {
 				isSaving = false;
-				var elm = $('#document-status').html('<span id="save-icon-failed" class="fa fa-times-circle fa-fw"></span>');
+				var elm = $('.document-status').html('<span id="save-icon-failed" class="fa fa-times-circle fa-fw"></span>');
 				if (xhr.status==403) {
 					let responseJson = JSON.parse(xhr.responseText);
 					if (responseJson.reason === 'old_mtime') {
@@ -352,12 +352,12 @@ $(document).ready(function() {
 				note: note
 			}
 		}).done(function(data) {
-			$('#document-status').hide();
 			if (stateHasChanged(tinymce.activeEditor)) {
 				if (!window.confirm('You have unsaved changes. Are you sure?')) {
 					return;
 				}
 			}
+			$('.document-status').hide();
 			// breadcrumb
 			$('#sidebar .breadcrumb').html('<li><a href="/">Home</a></li>')
 				.append('<li><a href="/edit/'+notebook+'">'+notebook+'</a></li>')
@@ -893,4 +893,15 @@ $(document).ready(function() {
 			return text_;
 		}
 	};
+
+	$('#content').scroll(function() {
+		//console.log('asdf');
+		//'#document-info'
+		let dinfo = $('#document-info');
+		if (dinfo.position().top + dinfo.height() < 0) {
+			$('.document-status-sidebar').show();
+		} else {
+			$('.document-status-sidebar').hide();
+		}
+	});
 });

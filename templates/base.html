@@ -105,6 +105,7 @@
 				aria-hidden="true" data-toggle="modal" data-target="#modal-new-note"></span></a>
 			<a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="New notebook"><span class="glyphicon glyphicon-book"
 				aria-hidden="true" data-toggle="modal" data-target="#modal-new-notebook"></span></a>{% endblock %}
+			<div class="document-status document-status-sidebar"></div>
 		</div>
 		<div id="notebooks-wrapper">
 			<div class="notebooks-list">
@@ -128,7 +129,7 @@
 		
 		<div id="document-info">
 			<input id="document-title" placeholder="Title" value="{{ note }}">
-			<span id="document-status"></span>
+			<span class="document-status"></span>
 		</div>
 		<select id="document-notebook" class="selectpicker" data-live-search="true" title="Select a notebook">
 		</select>

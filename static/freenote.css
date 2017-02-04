@@ -94,10 +94,13 @@ html, body {
 	font-weight:bold;
 	display:table-cell;
 }
-#document-status {
+.document-status {
 	display:table-cell;
 	width:20%;
 	text-align:right;
+}
+.document-status-sidebar {
+	float:right;
 }
 
 .error-message { /* alert */
