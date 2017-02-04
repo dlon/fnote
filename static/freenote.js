@@ -601,8 +601,22 @@ $(document).ready(function() {
 				targetNote:editNote
 			})
 		}).done(function(data) {
-			// TODO: change sidebar (at least breadcrumb) & URL
-			// TODO: create history event?
+			// update url & sidebar & notebook ref
+			if (getNotebook() === editNotebook) {
+				if (getNote() === editNote) {
+					window.history.replaceState(
+						{navLevel: 3, notebook:newNotebook, note:editNote},
+						'nbnav',
+						makeNoteUrl(newNotebook, editNote)
+					);
+					navLoadNotebook(newNotebook, updateHistory=false, loadBreadcrumb=false);
+					$('.breadcrumb li:nth-child(2)').html('<a href="/edit/'+newNotebook+'">'+newNotebook+'</a>');
+				} else {
+					navLoadNotebook(editNotebook, updateHistory=false, loadBreadcrumb=false);
+				}
+			} else if (getNotebook() === newNotebook) {
+				navLoadNotebook(newNotebook, updateHistory=false, loadBreadcrumb=false);
+			}
 			editNotebook = newNotebook;
 		}).fail(function(xhr, textStatus, errorThrown) {
 			$('#content').prepend(hbAlertError({
