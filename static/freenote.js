@@ -660,15 +660,15 @@ $(document).ready(function() {
 							$(this).attr('href', '/edit/'+editNotebook+'/'+newNote);
 						}
 					});
+					if (getNote() === editNote) {
+						$('.breadcrumb > li:last').text(newNote);
+						window.history.replaceState(
+							{navLevel: 3, notebook:editNotebook, note:newNote},
+							'nbnav',
+							makeNoteUrl(editNotebook, newNote)
+						);
+					}
 				}
-				if (getNote() === editNote) {
-					$('.breadcrumb > li:last').text(newNote);
-				}
-				window.history.replaceState(
-					{navLevel: 3, notebook:editNotebook, note:newNote},
-					'nbnav',
-					makeNoteUrl(editNotebook, newNote)
-				);
 				document.title = newNote + ' - Freenote';
 				editNote = newNote;
 				isrenaming = false;
