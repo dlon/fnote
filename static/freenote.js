@@ -107,6 +107,10 @@ $(document).ready(function() {
 		}
 	}
 	function searchFor(str, updateHistory=true) {
+		if (!$.trim(str)) {
+			$('.search-results').hide();
+			return;
+		}
 		$.ajax('/api/search', {
 			method: 'GET',
 			dataType: 'json',
@@ -126,13 +130,16 @@ $(document).ready(function() {
 	}
 
 	// search
-	$('input[name="searchbar"]').keyup(function(ev) {
-		if (ev.which === 13 || ev.which === 37 || ev.which === 38 || ev.which === 39 || ev.which === 40) {
+	let sbar = $('input[name="searchbar"]');
+	let sbarLastVal = sbar.val();
+	sbar.keyup(function(ev) {
+		if ($(this).val() === sbarLastVal) {
 			return;
 		}
 		searchFor($(this).val());
+		sbarLastVal = $(this).val();
 	});
-	$('input[name="searchbar"]').focus(function(ev) {
+	sbar.focus(function(ev) {
 		$('.search-results').show();
 	});
 	// hide search results when clicking outside the search area
