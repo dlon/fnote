@@ -68,6 +68,7 @@ $(document).ready(function() {
 					+ v.notebook.slice(matchIndex+matchLen);
 			}
 			matchIndex = v.note.toLowerCase().indexOf(searchStr.toLowerCase());
+			v.note_plain = v.note;
 			if (matchIndex !== -1) {
 				v.note = v.note.slice(0, matchIndex)
 					+ "<strong>"+v.note.slice(matchIndex,matchIndex+matchLen)+"</strong>"
