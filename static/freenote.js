@@ -458,10 +458,13 @@ $(document).ready(function() {
 						dataType: 'json'
 					}).done(function(data) {
 						deleteDlg.modal('hide');
-						navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
-						// TODO: deal with current note being deleted
-						/*
 						if (editNote === noteToolbarNote && editNotebook === noteToolbarNotebook) {
+							// reset URL if necessary
+							if (getNote() === noteToolbarNote && getNotebook() === noteToolbarNotebook) {
+								navLoadNotebook(noteToolbarNotebook, updateHistory = true, loadBreadcrumb = true);
+							} else {
+								navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
+							}
 							// unload the current note
 							editNotebook = null;
 							editNote = null;
@@ -470,8 +473,9 @@ $(document).ready(function() {
 							$('#document-title').val('');
 							reloadNotebooksSelect();
 							tinymce.activeEditor.setContent('');
+						} else {
+							navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
 						}
-						*/
 					}).fail(function(xhr, textStatus, errorThrown) {
 						$('#content').prepend(hbAlertError({
 							bolded: errorThrown,
