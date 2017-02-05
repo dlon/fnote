@@ -61,12 +61,13 @@ def index():
 		notebooks=[dir.decode('latin1') for dir in os.listdir('notes/')],
 		recentNotes=recentNotes)
 
-@app.route('/edit/<notebook>')
+@app.route('/edit/<path:notebook>')
 @checkAuthIfSet
 def notebook(notebook):
 	nbDir = 'notes/%s/' % notebook
 	notes = os.listdir(nbDir) # FIXME: don't trust the input
 	notes.sort(key=lambda x: os.stat(os.path.join(nbDir, x)).st_mtime, reverse=True) # sort by mod date
+	notebook = notebook.strip('/')
 	return flask.render_template('notebook.html', notebook=notebook, notes=notes)
 
 @app.route('/edit/<notebook>/<note>')
