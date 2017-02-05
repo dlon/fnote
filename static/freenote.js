@@ -203,6 +203,7 @@ $(document).ready(function() {
 				if (xhr.status==403) {
 					let responseJson = JSON.parse(xhr.responseText);
 					if (responseJson.reason === 'old_mtime') {
+						elm.children().attr('title', 'The note has been altered outside this editor. Modifications were not saved.');
 						$('#modal-confirm-overwrite').modal();
 						return;
 					}
