@@ -511,18 +511,41 @@ $(document).ready(function() {
 				renameDlg.find(':submit').click(function(e) {
 					e.preventDefault();
 					renameDlg.modal('hide');
+					let newNotebook = renameDlg.find('select').val();
+					let newNote = renameDlg.find('input').val();
 					$.ajax('/api/rename', {
 						method: 'POST',
 						contentType: 'application/json',
 						data: JSON.stringify({
 							sourceNotebook:noteToolbarNotebook,
 							sourceNote:noteToolbarNote,
-							targetNotebook:renameDlg.find('select').val(),
-							targetNote:renameDlg.find('input').val(),
+							targetNotebook:newNotebook,
+							targetNote:newNote,
 						})
 					}).done(function(data) {
-						navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
-						// TODO: deal with current note being renamed
+						if (getNote() === noteToolbarNote) {
+							$('.breadcrumb > li:last').text(newNote);
+							window.history.replaceState(
+								{navLevel: 3, notebook:newNotebook, note:newNote},
+								'nbnav',
+								makeNoteUrl(newNotebook, newNote)
+							);
+							document.title = newNote + ' - Freenote';
+							$('#document-notebook').selectpicker('val', newNotebook);
+							$('#document-title').val(newNote);
+							if (newNotebook !== noteToolbarNotebook) {
+								$('.breadcrumb li:nth-child(2)').html('<a href="/edit/'+newNotebook+'">'+newNotebook+'</a>');
+								navLoadNotebook(newNotebook, updateHistory = false, loadBreadcrumb = false);
+							} else {
+								navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
+							}
+						} else {
+							navLoadNotebook(noteToolbarNotebook, updateHistory = false, loadBreadcrumb = false);
+						}
+						if (noteToolbarNote === editNote && noteToolbarNotebook === editNotebook) {
+							editNote = newNote;
+							editNotebook = newNotebook;
+						}
 						renameDlg.modal('hide');
 					}).fail(function(xhr, textStatus, errorThrown) {
 						$('#content').prepend(hbAlertError({
