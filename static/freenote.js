@@ -895,8 +895,6 @@ $(document).ready(function() {
 	};
 
 	$('#content').scroll(function() {
-		//console.log('asdf');
-		//'#document-info'
 		let dinfo = $('#document-info');
 		if (dinfo.position().top + dinfo.height() < 0) {
 			$('.document-status-sidebar').show();

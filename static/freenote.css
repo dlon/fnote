@@ -101,6 +101,7 @@ html, body {
 }
 .document-status-sidebar {
 	float:right;
+	display:none;
 }
 
 .error-message { /* alert */
