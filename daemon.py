@@ -12,8 +12,8 @@ import html2markdown
 
 # set user and password to enable HTTP basic authentication
 from functools import wraps
-username = 'admin'
-password = 'pass'
+username = ''
+password = ''
 
 numberOfRecentNotes = 7
 
