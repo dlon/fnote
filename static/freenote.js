@@ -675,7 +675,7 @@ $(document).ready(function() {
 		renamingTimer = setTimeout(function() {
 			renamingTimer = 0;
 			let newNote = $('#document-title').val();
-			if (newNote === editNote) {
+			if (newNote === editNote || !newNote) {
 				return;
 			}
 			isrenaming = true;
