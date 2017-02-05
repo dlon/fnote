@@ -622,6 +622,9 @@ $(document).ready(function() {
 			return;
 		}
 		var newNotebook = $('#document-notebook option:selected').text();
+		if (newNotebook === editNotebook) {
+			return;
+		}
 		$.ajax('/api/rename', {
 			method: 'POST',
 			contentType: 'application/json',
@@ -662,7 +665,6 @@ $(document).ready(function() {
 	var renamingTimer = 0;
 	var isrenaming = false;
 	$('#document-title').keydown(function(ev) {
-		// TODO: only update if changed
 		if (!editNote || !editNotebook || isrenaming) {
 			return;
 		}
@@ -672,6 +674,9 @@ $(document).ready(function() {
 		renamingTimer = setTimeout(function() {
 			renamingTimer = 0;
 			let newNote = $('#document-title').val();
+			if (newNote === editNote) {
+				return;
+			}
 			isrenaming = true;
 			$.ajax('/api/rename', {
 				method: 'POST',
