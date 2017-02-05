@@ -2,7 +2,6 @@
 from flask import Flask
 import flask
 app = Flask('freenote')
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # FIXME: remove. for instantaneous updates
 
 import os
 import shutil
