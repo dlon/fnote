@@ -5,19 +5,18 @@
 	<meta charset="UTF-8">
 	<script src="/static/jquery.min.js"></script>
 	
-	<!-- FIXME: use local files -->
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
-	<!-- bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="/static/handlebars-v4.0.5.js"></script>
+	<link rel="stylesheet" href="/static/bootstrap-3.3.7/css/bootstrap.min.css">
+	<script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 
 	<script src="/static/tinymce/tinymce.min.js"></script>
 	<script src="/static/upndown.bundle.min.js"></script>
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
-	<script src="https://use.fontawesome.com/b69c523192.js"></script>
+	<link rel="stylesheet" href="/static/bootstrap-select-1.12.2/css/bootstrap-select.min.css">
+	<script src="/static/bootstrap-select-1.12.2/js/bootstrap-select.min.js"></script>
+
+	<link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.min.css">
 
 	<script>
 	{% if mtime %}var editMtime = {{ mtime }};
@@ -27,7 +26,7 @@
 
 	{% raw %}
 	<script id="searchbox-template" type="text/x-handlebars-template">
-		<a href="/edit/{{notebook_plain}}/{{note}}">
+		<a href="/edit/{{notebook_plain}}/{{note_plain}}">
 			<div class="searchbox">
 				<p class="search-file">{{{notebook}}}/{{{note}}}</p>
 				<p>{{{response}}}</p>
@@ -114,13 +113,12 @@
 		</div>
 	</div>
 	<div id="content">
-		<div id="search-wrapper"> <!-- to handle clicks removing the search results -->
+		<div id="search-wrapper">
 			<form class="navbar-form" role="search">
 				<div class="input-group col-xs-10">
 					<input type="text" placeholder="Search all notes" class="form-control" name="searchbar" tabindex="1">					
 					<div class="input-group-btn">
 						<button type="submit" class="btn btn-secondary"><span class="glyphicon glyphicon-search"></span></button>
-						<!-- TODO: use bootstrap 4's btn-outline-primary -->
 					</div>
 				</div>
 			</form>

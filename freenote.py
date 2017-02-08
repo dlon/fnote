@@ -56,9 +56,14 @@ def index():
 	recentNotes.sort(key=lambda x: os.stat(x).st_mtime, reverse=True)
 	recentNotes = [[x.decode('latin1') for x in path.replace('\\','/').split('/')[1:]]
 		for path in recentNotes[:numberOfRecentNotes]]
-	return flask.render_template('index.html',
-		notebooks=[dir.decode('latin1') for dir in os.listdir('notes/')],
-		recentNotes=recentNotes)
+	try:
+		return flask.render_template('index.html',
+			notebooks=[dir.decode('latin1') for dir in os.listdir('notes/')],
+			recentNotes=recentNotes)
+	except OSError:
+		return flask.render_template('index.html',
+			notebooks=[],
+			recentNotes=recentNotes)
 
 @app.route('/edit/<path:notebook>')
 @checkAuthIfSet
@@ -168,10 +173,16 @@ def apiGetNotebooks():
 	recentNotes.sort(key=lambda x: os.stat(x).st_mtime, reverse=True)
 	recentNotes = [[x.decode('latin1') for x in path.replace('\\','/').split('/')[1:]]
 		for path in recentNotes[:numberOfRecentNotes]]
-	return flask.json.dumps({
-		'notebooks': [item.decode('latin1') for item in os.listdir('notes/') if os.path.isdir('notes/%s' % item)],
-		'recentNotes': recentNotes,
-	})
+	try:
+		return flask.json.dumps({
+			'notebooks': [item.decode('latin1') for item in os.listdir('notes/') if os.path.isdir('notes/%s' % item)],
+			'recentNotes': recentNotes,
+		})
+	except OSError:
+		return flask.json.dumps({
+			'notebooks': [],
+			'recentNotes': recentNotes,
+		})
 
 @app.route('/api/notes', methods=['GET'])
 @checkAuthIfSet
