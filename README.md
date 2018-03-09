@@ -1,20 +1,20 @@
-# Freenote
+# Fnote
 
-Freenote is a self-hosted and web-based notetaking application built on Python 2.7 and Flask. Its data are stored in human-readable Markdown files, which can easily be edited directly on your machine/server as well.
+Fnote is a self-hosted and web-based notetaking application built on Python 2.7 and Flask. Its data are stored in human-readable Markdown files, which can easily be edited directly on your machine/server as well.
 
 # Installation
 
-Freenote requires that you have Python 2.7 installed.
+Fnote requires that you have Python 2.7 installed.
 
-Freenote also has three library dependencies. You can install them using pip:
+Fnote also has three library dependencies. You can install them using pip:
 
 	pip install -r requirements.txt
 
-# Running Freenote
+# Running Fnote
 
 You can run the server using the default settings easily:
 
-    python freenote.py
+    python fnote.py
 
 Flask will run a web server that is only accessible to you locally (unless you tell it otherwise).
 
@@ -22,14 +22,14 @@ Flask will run a web server that is only accessible to you locally (unless you t
 
 To make the server public, run
 
-	set FLASK_APP=freenote.py
+	set FLASK_APP=fnote.py
 	flask run --host=0.0.0.0
 
 ## Host using WSGI
 
 ## Authentication
 
-If you want to restrict access to your notes, enable HTTP authentication by setting `username` and `password` in freenote.py. If they are empty strings (the default), HTTP authentication is disabled.
+If you want to restrict access to your notes, enable HTTP authentication by setting `username` and `password` in fnote.py. If they are empty strings (the default), HTTP authentication is disabled.
 
 # Features
 
@@ -47,4 +47,4 @@ The notes use Markdown syntax and are stored in the *notes/* directory in the ap
 
 ## Screenshots
 
-<a href="//dlon.github.io/freenote/editing.PNG" title="Editing a note"><img src="https://dlon.github.io/freenote/editing.PNG" width="50%" /></a> <a href="//dlon.github.io/freenote/searchAndRecent.PNG" title="Searching & recent notes"><img src="https://dlon.github.io/freenote/searchAndRecent.PNG" width="50%" /></a> <a href="//dlon.github.io/freenote/createNote.PNG" title="Creating a note"><img src="https://dlon.github.io/freenote/createNote.PNG" width="50%" /></a> <a href="//dlon.github.io/freenote/createNotebook.PNG" title="Creating a notebook"><img src="https://dlon.github.io/freenote/createNotebook.PNG" width="50%" /></a>
+<a href="//dlon.github.io/fnote/editing.PNG" title="Editing a note"><img src="https://dlon.github.io/fnote/editing.PNG" width="50%" /></a> <a href="//dlon.github.io/fnote/searchAndRecent.PNG" title="Searching & recent notes"><img src="https://dlon.github.io/fnote/searchAndRecent.PNG" width="50%" /></a> <a href="//dlon.github.io/fnote/createNote.PNG" title="Creating a note"><img src="https://dlon.github.io/fnote/createNote.PNG" width="50%" /></a> <a href="//dlon.github.io/fnote/createNotebook.PNG" title="Creating a notebook"><img src="https://dlon.github.io/fnote/createNotebook.PNG" width="50%" /></a>
